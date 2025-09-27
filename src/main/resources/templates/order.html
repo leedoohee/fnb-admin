@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Tables - SB Admin</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+        <link href="/css/styles.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/6.3.1/css/tabulator_bootstrap5.min.css" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="index.html">골목식당</a>
+            <!-- Sidebar Toggle-->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <!-- Navbar Search-->
+            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+            <!-- Navbar-->
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#!">Settings</a></li>
+                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Core</div>
+                            <a class="nav-link" href="index.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Interface</div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Layouts
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="layout-static.html">Static Navigation</a>
+                                    <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Pages
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                        Authentication
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="login.html">Login</a>
+                                            <a class="nav-link" href="register.html">Register</a>
+                                            <a class="nav-link" href="password.html">Forgot Password</a>
+                                        </nav>
+                                    </div>
+                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                        Error
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="401.html">401 Page</a>
+                                            <a class="nav-link" href="404.html">404 Page</a>
+                                            <a class="nav-link" href="500.html">500 Page</a>
+                                        </nav>
+                                    </div>
+                                </nav>
+                            </div>
+                            <div class="sb-sidenav-menu-heading">Addons</div>
+                            <a class="nav-link" href="charts.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                Charts
+                            </a>
+                            <a class="nav-link" href="product.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Tables
+                            </a>
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        골목식당
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h2 class="mt-4 mb-4">주문관리</h2>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                검색조건
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-2 justify-content-end">
+                                    <div class="col-auto">
+                                        <button type="button" id="searchOrderBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                                            검색
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                        <tr>
+                                            <td class="col-lg-2">주문일자</td>
+                                            <td class="col-lg-10">
+                                                <div class="row">
+                                                    <div class="col-lg-2">
+                                                        <input id="startDate" class="form-control" type="date" />
+                                                    </div>
+                                                    ~
+                                                    <div class="col-lg-2">
+                                                        <input id="endDate" class="form-control" type="date" />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-2">주문유형</td>
+                                            <td class="col-lg-10">
+                                                <div class="row">
+                                                    <div class="col-lg-2">
+                                                        <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                        <label class="form-check-label" for="">
+                                                            픽업
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                        <label class="form-check-label" for="">
+                                                            배달
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-2">주문상태</td>
+                                            <td class="col-lg-10">
+                                                <div class="row">
+                                                    <div class="col-lg-2">
+                                                        <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                        <label class="form-check-label" for="">
+                                                            임시저장
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                        <label class="form-check-label" for="">
+                                                            주문완료
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                        <label class="form-check-label" for="">
+                                                            픽업완료
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                        <label class="form-check-label" for="">
+                                                            배달완료
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        <input type="checkbox" class="form-check-input" id="" />
+                                                        <label class="form-check-label" for="">
+                                                            주문확정
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>검색</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-lg-2">
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>주문번호</option>
+                                                            <option value="1">주문자</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <input type="text" class="form-control" id="basicInput" />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                리스트
+                            </div>
+                            <div class="card-body">
+                                <div id="orderListTable"></div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div>
+                                <a href="#">Privacy Policy</a>
+                                &middot;
+                                <a href="#">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            <div class="modal fade" id="fullscreenModal" tabindex="-1" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="fullscreenModalLabel">주문상세</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-1"></i>
+                                    기본정보
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="col-lg-2">주문번호</td>
+                                                    <td class="col-lg-4">
+
+                                                    </td>
+                                                    <td class="col-lg-2">주문상태</td>
+                                                    <td class="col-lg-4">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-lg-2">주문일시</td>
+                                                    <td class="col-lg-4">
+
+                                                    </td>
+                                                    <td class="col-lg-2">배송형태</td>
+                                                    <td class="col-lg-4">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-lg-2">멤버십등급</td>
+                                                    <td class="col-lg-4">
+
+                                                    </td>
+                                                    <td class="col-lg-2">주문자</td>
+                                                    <td class="col-lg-4">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-lg-2">주소</td>
+                                                    <td colspan="3" class="col-lg-10">
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-1"></i>
+                                    주문상품정보
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <th>번호</th>
+                                            <th>상품명</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="col-lg-1">1</td>
+                                                <td colspan="3" class="col-lg-11">
+                                                    주먹밥
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-lg-1">2</td>
+                                                <td colspan="3" class="col-lg-11">
+                                                    짜장면
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-1"></i>
+                                    주문결제정보
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                        <tr>
+                                            <td class="col-lg-2">결제일시</td>
+                                            <td class="col-lg-4">
+
+                                            </td>
+                                            <td class="col-lg-2">결제유형</td>
+                                            <td class="col-lg-4">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-2">결제방식</td>
+                                            <td class="col-lg-4">
+
+                                            </td>
+                                            <td class="col-lg-2">카드번호</td>
+                                            <td class="col-lg-4">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-2">사용포인트</td>
+                                            <td class="col-lg-4">
+
+                                            </td>
+                                            <td class="col-lg-2">사용쿠폰수</td>
+                                            <td class="col-lg-4">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-2">사용쿠폰</td>
+                                            <td colspan="3" class="col-lg-10">
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-2">총결제금액</td>
+                                            <td class="col-lg-4">
+
+                                            </td>
+                                            <td class="col-lg-2">실결제금액</td>
+                                            <td class="col-lg-4">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-2">배달비</td>
+                                            <td class="col-lg-4">
+
+                                            </td>
+                                            <td class="col-lg-2">부가세금액</td>
+                                            <td class="col-lg-4">
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/6.3.1/js/tabulator.min.js"></script>
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editor = new toastui.Editor({
+            el: document.querySelector('#editor'),
+            previewStyle: 'vertical',
+            height: '500px'
+        });
+
+        editor.getMarkdown();
+    });
+
+    const orderListTable = new Tabulator("#orderListTable", {
+        height:"500px",
+        layout:"fitColumns",
+        columns:[
+            {title:"주문번호", field:"orderId", width:150},
+            {title:"주문자", field:"memberName", width:100},
+            {title:"주문상태", field:"orderStatus", width:100},
+            {title:"주문일시", field:"orderDate", width:180},
+            {title:"총결제금액", field:"totalAmount", hozAlign:"right", sorter:"number", width:120},
+            {title:"결제상태", field:"paymentStatus", width:100},
+            {title:"결제일시", field:"paymentDate", width:180},
+            {title:"결제유형", field:"paymentType", width:100},
+            {title:"실결제금액", field:"paymentAmount", hozAlign:"right", sorter:"number", width:120},
+        ],
+    });
+
+    document.querySelector("#searchOrderBtn").addEventListener("click", function() {
+        fetch('http://localhost:8080/order/list?startDate=2023-01-01&endDate=2023-12-31&page=1&size=20')
+            .then(response => response.json())
+            .then(data => {
+                orderListTable.setData(data);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    });
+</script>

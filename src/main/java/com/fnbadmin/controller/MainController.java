@@ -6,13 +6,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainController {
 
-    @GetMapping("/main/index")
+    @GetMapping("/page/index")
     public String index(){
         return "index.html";
     }
 
-    @GetMapping("/main/tables")
-    public String tables(){
-        return "tables.html";
+    @GetMapping("/page/product")
+    public String product(){
+        return "product.html";
+    }
+
+    @GetMapping("/page/coupon")
+    public String coupon(){
+        return "coupon.html";
+    }
+
+    @GetMapping("/page/order")
+    public String order(){
+        return "order.html";
+    }
+
+    @GetMapping("/page/member")
+    public String member(){
+        return "member.html";
     }
 }
