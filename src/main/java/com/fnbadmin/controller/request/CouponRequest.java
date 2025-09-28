@@ -16,5 +16,4 @@ public class CouponRequest {
     private String status;
     private int page;
     private int pageLimit;
-
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class PaymentRepository {
 
-    private EntityManager em;
+    private final EntityManager em;
 
     public PaymentRepository(EntityManager entityManager) {
         this.em = entityManager;

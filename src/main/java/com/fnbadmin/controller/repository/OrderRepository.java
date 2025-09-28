@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class OrderRepository {
 
-    private EntityManager em;
+    private final EntityManager em;
 
     public OrderRepository(EntityManager entityManager) {
         this.em = entityManager;

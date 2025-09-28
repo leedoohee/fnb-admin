@@ -5,13 +5,14 @@ import com.fnbadmin.controller.response.OrderInfoResponse;
 import com.fnbadmin.controller.response.OrderListResponse;
 import com.fnbadmin.controller.service.OrderService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Controller
 public class OrderController {
 
     private final OrderService orderService;

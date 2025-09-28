@@ -6,13 +6,13 @@ import com.fnbadmin.controller.response.CouponInfoResponse;
 import com.fnbadmin.controller.response.CouponListResponse;
 import com.fnbadmin.controller.service.CouponService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
-@RestController
+@Controller
 public class CouponController {
 
     private final CouponService couponService;
@@ -38,7 +38,6 @@ public class CouponController {
 
     @PostMapping("/coupon")
     public ResponseEntity<Boolean> create(CreateCouponRequest createCouponRequest) {
-        // Implementation for creating a new coupon would go here
         return ResponseEntity.ok(this.couponService.create(createCouponRequest));
     }
 }

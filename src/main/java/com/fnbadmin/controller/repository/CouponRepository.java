@@ -2,8 +2,6 @@ package com.fnbadmin.controller.repository;
 
 import com.fnbadmin.domain.Coupon;
 import com.fnbadmin.domain.CouponProduct;
-import com.fnbadmin.domain.Payment;
-import com.fnbadmin.domain.PaymentElement;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Component;
 

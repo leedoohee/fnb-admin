@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CouponService {
@@ -47,8 +46,8 @@ public class CouponService {
             responses.add(CouponListResponse.builder()
                     .couponId(coupon.getId())
                     .description(coupon.getDescription())
-                    .applyStartDate(String.valueOf(coupon.getApplyStartDate()))
-                    .applyEndDate(String.valueOf(coupon.getApplyEndDate()))
+                    .applyStartDate(String.valueOf(coupon.getApplyStartAt()))
+                    .applyEndDate(String.valueOf(coupon.getApplyEndAt()))
                     .status(coupon.getStatus())
                     .build());
         }
@@ -58,6 +57,8 @@ public class CouponService {
 
     public CouponInfoResponse getInfo(int couponId) {
         Coupon coupon                       = this.couponRepository.findCoupon(couponId);
+        //TODO CreateCouponResponse로 변경
+        //TODO couponProducts 세팅
         List<CouponProduct> couponProducts  = this.couponRepository.findCouponProducts(couponId);
         coupon.setCouponProducts(couponProducts);
 
@@ -76,8 +77,8 @@ public class CouponService {
                 .couponType(couponRequest.getCouponType())
                 .discountType(couponRequest.getDiscountType())
                 .discountAmount(couponRequest.getDiscountAmount())
-                .applyStartDate(couponRequest.getApplyStartDate())
-                .applyEndDate(couponRequest.getApplyEndDate())
+                .applyStartAt(couponRequest.getApplyStartDate())
+                .applyEndAt(couponRequest.getApplyEndDate())
                 .minApplyPrice(couponRequest.getMinApplyPrice())
                 .memberShipGrades(couponRequest.getMemberShipGrades())
                 .availableQuantity(couponRequest.getAvailableQuantity())

@@ -46,7 +46,7 @@ public class OrderService {
         for(Order order : orders) {
             responses.add(OrderListResponse.builder()
                     .orderId(order.getOrderId())
-                    .orderDate(order.getOrderDate())
+                    .orderDate(String.valueOf(order.getOrderDate()))
                     .orderStatus(order.getOrderStatus())
                     .totalAmount(order.getTotalAmount())
                     .paymentType(order.getPayment() != null ? order.getPayment().getPaymentType() : null)
@@ -62,29 +62,27 @@ public class OrderService {
         Order order                      = this.orderRepository.findOrder(orderId);
         List<OrderProduct> orderProducts = this.orderRepository.findOrderProducts(orderId);
         Payment payment                  = this.paymentRepository.findPayment(orderId);
-        List<String> orderProductIdList  = orderProducts.stream().map(OrderProduct::getOrderProductId).toList();
+        List<String> orderProductIdList  = orderProducts.stream().map(OrderProduct::getId).map(String::valueOf).toList();
         String orderProductIds           = String.join(",", orderProductIdList);
         List<OrderAdditionalOption> orderAdditionalOptions = this.orderRepository.findOrderAdditionalOptions(orderProductIds);
 
         for (OrderProduct orderProduct : orderProducts) {
-            List<OrderAdditionalOption> additionalOptions = orderAdditionalOptions.stream()
-                    .filter(option -> option.getOrderProductId().equals(orderProduct.getOrderProductId()))
-                    .toList();
-
-            orderProduct.setOrderAdditionalOptions(additionalOptions);
+            orderProduct.setOrderAdditionalOptions(orderAdditionalOptions.stream()
+                    .filter(option -> option.getOrderProductId().equals(orderProduct.getId()))
+                    .toList());
         }
 
         return OrderInfoResponse.builder()
                 .orderId(order.getOrderId())
                 .memberName(order.getMember() != null ? order.getMember().getName() : null)
                 .orderStatus(order.getOrderStatus())
-                .orderDate(order.getOrderDate())
+                .orderDate(String.valueOf(order.getOrderDate()))
                 .totalAmount(order.getTotalAmount())
                 .usePoint(order.getUsePoint())
                 .couponAmount(BigDecimal.valueOf(order.getCouponAmount()))
                 .discountAmount(order.getDiscountAmount())
                 .paymentStatus(payment != null ? payment.getPaymentStatus() : null)
-                .paymentDate(payment != null ? payment.getPaymentDate() : null)
+                .paymentDate(payment != null ? String.valueOf(payment.getPaymentAt()) : null)
                 .paymentType(payment != null ? payment.getPaymentType() : null)
                 .paymentAmount(payment != null ? payment.getPaymentAmount() : null)
                 .orderProducts(orderProducts)
