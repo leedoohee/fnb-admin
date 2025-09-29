@@ -1,6 +1,7 @@
 package com.fnbadmin.filter;
 
 import com.fnbadmin.util.JwtTokenProvider;
+import io.micrometer.common.lang.NonNullApi;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@NonNullApi
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
@@ -35,12 +37,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // 💡 변경 1: 토큰에서 userId 추출
                 String userId = tokenProvider.parse(jwt);
 
-                List<GrantedAuthority> authorities = Collections.singletonList(
-                        new SimpleGrantedAuthority("ROLE_USER")
-                );
-
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userId, null, authorities);
+                        userId, null, null);
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
