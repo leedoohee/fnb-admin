@@ -1,27 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title th:replace="${title} ?: 'Dashboard - SB Admin'">Dashboard - SB Admin</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+    <script th:src="@{/webjars/fontawesome/6.3.0/js/all.js}" crossorigin="anonymous"></script>
+    <th:block layout:fragment="css"></th:block>
 </head>
 
 <body class="sb-nav-fixed">
-<div th:fragment="index (title, content)">
+<div th:fragment="index(content)">
     <nav th:replace="fragments/navbar :: navbar"></nav>
     <div id="layoutSidenav">
         <aside th:replace="fragments/sidebar :: sidebar"></aside>
         <div id="layoutSidenav_content">
             <main class="content-wrapper">
-                <div th:replace="${content}"></div>
+                <div layout:fragment="content"></div>
             </main>
         </div>
     </div>
-
+    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+    <th:block layout:fragment="script"></th:block>
 </div>
 </body>
 </html>

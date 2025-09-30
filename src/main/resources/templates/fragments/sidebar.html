@@ -1,9 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <div id="layoutSidenav_nav" th:fragment="sidebar">
     <nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
         <div class="sb-sidenav-menu">
             <div class="nav">
                 <div class="sb-sidenav-menu-heading">main</div>
-                <a class="nav-link" href="http://localhost:8080/dashboard">
+                <a class="nav-link" th:href="@{/dashboard}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     대시보드
                 </a>
@@ -16,8 +18,8 @@
                 </a>
                 <div class="collapse" id="member" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="http://localhost:8080/member">회원관리</a>
-                        <a class="nav-link" href="http://localhost:8080/member-grade">등급관리</a>
+                        <a class="nav-link" th:href="@{/member}">회원관리</a>
+                        <a class="nav-link" th:href="@{/member-grade}">등급관리</a>
                     </nav>
                 </div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#product" aria-expanded="false" aria-controls="collapseLayouts">
@@ -27,8 +29,8 @@
                 </a>
                 <div class="collapse" id="product" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="http://localhost:8080/product">상품관리</a>
-                        <a class="nav-link" href="http://localhost:8080/product-option">옵션관리</a>
+                        <a class="nav-link" th:href="@{/product}">상품관리</a>
+                        <a class="nav-link" th:href="@{/product-option}">옵션관리</a>
                     </nav>
                 </div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#order" aria-expanded="false" aria-controls="collapseLayouts">
@@ -92,3 +94,4 @@
         </div>
     </nav>
 </div>
+</html>
