@@ -25,6 +25,11 @@ public class MemberController {
         return "member.html";
     }
 
+    @GetMapping("/member-grade")
+    public String memberGrade() {
+        return "member-grade.html";
+    }
+
     @GetMapping("/member/{memberId}")
     public ResponseEntity<MemberInfoResponse> getInfo(@PathVariable String memberId) {
         return ResponseEntity.ok(this.memberService.getInfo(memberId));

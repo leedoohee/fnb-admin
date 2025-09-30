@@ -37,6 +37,7 @@ public class SecurityConfig {
                         //.requestMatchers("/auth/login", "/auth/register").permitAll()
                         // 그 외 모든 요청은 인증(토큰) 필요
                         //.anyRequest().authenticated()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/**").permitAll()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)

@@ -26,6 +26,11 @@ public class CouponController {
         return "coupon.html";
     }
 
+    @GetMapping("/coupon-statistics")
+    public String couponStatistics(){
+        return "coupon-statistics.html";
+    }
+
     @GetMapping("/coupon/list")
     public ResponseEntity<List<CouponListResponse>> getCoupons(CouponRequest couponRequest) {
         return ResponseEntity.ok(this.couponService.getList(couponRequest));

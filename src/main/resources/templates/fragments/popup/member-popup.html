@@ -43,122 +43,430 @@
                     내역
                 </div>
                 <div class="card-body">
-                    <div class="row mb-2 justify-content-start">
-                        <div class="btn-group mb-4" role="group" aria-label="Basic checkbox toggle button group">
-                            <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btncheck1">주문내역</label>
+                    <div class="row mb-4 justify-content-start">
+                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                            <input type="radio" class="btn-check" name="memberHistory" id="memberOrder" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary" for="memberOrder">주문내역</label>
 
-                            <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btncheck2">쿠폰내역</label>
+                            <input type="radio" class="btn-check" name="memberHistory" id="memberCoupon" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="memberCoupon">쿠폰내역</label>
 
-                            <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btncheck3">포인트내역</label>
+                            <input type="radio" class="btn-check" name="memberHistory" id="memberPoint" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="memberPoint">포인트내역</label>
 
-                            <input type="checkbox" class="btn-check" id="btncheck4" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btncheck4">리뷰내역</label>
+                            <input type="radio" class="btn-check" name="memberHistory" id="memberReview" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="memberReview">리뷰내역</label>
                         </div>
                     </div>
-                    <div class="row mb-2 justify-content-end">
-                        <div class="col-auto">
-                            <button type="button" id="searchOrderBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
-                                검색
-                            </button>
+                    <div id="memberOrderSection">
+                        <div class="row mb-2 justify-content-end">
+                            <div class="col-auto">
+                                <button type="button" id="searchOrderBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                                    검색
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <table class="table table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td class="col-lg-2">주문일자</td>
+                                    <td class="col-lg-10">
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <input id="startDate" class="form-control" type="date" />
+                                            </div>
+                                            ~
+                                            <div class="col-lg-2">
+                                                <input id="endDate" class="form-control" type="date" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-lg-2">주문유형</td>
+                                    <td class="col-lg-10">
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    픽업
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    배달
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-lg-2">주문상태</td>
+                                    <td class="col-lg-10">
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    임시저장
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    주문완료
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    픽업완료
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    배달완료
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input type="checkbox" class="form-check-input" id="" />
+                                                <label class="form-check-label" for="">
+                                                    주문확정
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>검색</td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>주문번호</option>
+                                                    <option value="1">주문자</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <input type="text" class="form-control" id="basicInput" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div id="memberOrderTable"></div>
+                            <script th:inline="javascript">
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    const memberOrderTable = new Tabulator("#memberOrderTable", {
+                                        height:"350px",
+                                        layout:"fitColumns",
+                                        columns:[
+                                            {title:"Name", field:"name", width:200},
+                                            {title:"Progress", field:"progress", hozAlign:"right", sorter:"number"},
+                                            {title:"Gender", field:"gender", widthGrow:2},
+                                            {title:"Rating", field:"rating", hozAlign:"center"},
+                                            {title:"Favourite Color", field:"col", widthGrow:3},
+                                            {title:"Date Of Birth", field:"dob", hozAlign:"center", sorter:"date", widthGrow:2},
+                                            {title:"Driver", field:"car", hozAlign:"center"},
+                                        ],
+                                    });
+                                });
+                            </script>
                         </div>
                     </div>
-                    <div class="row">
-                        <table class="table table-bordered">
-                            <tbody>
-                            <tr>
-                                <td class="col-lg-2">주문일자</td>
-                                <td class="col-lg-10">
-                                    <div class="row">
-                                        <div class="col-lg-2">
-                                            <input id="startDate" class="form-control" type="date" />
+                    <div id="memberCouponSection">
+                        <div class="row mb-2 justify-content-end">
+                            <div class="col-auto">
+                                <button type="button" id="searchCouponBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                                    검색
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <table class="table table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td class="col-lg-2">발급일자</td>
+                                    <td class="col-lg-10">
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <input id="startDate" class="form-control" type="date" />
+                                            </div>
+                                            ~
+                                            <div class="col-lg-2">
+                                                <input id="endDate" class="form-control" type="date" />
+                                            </div>
                                         </div>
-                                        ~
-                                        <div class="col-lg-2">
-                                            <input id="endDate" class="form-control" type="date" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-lg-2">사용상태</td>
+                                    <td class="col-lg-10">
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <input type="radio" class="form-check-input" name="coupon" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    전체
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input type="radio" class="form-check-input" name="coupon" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    사용
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input type="radio" class="form-check-input" name="coupon" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    미사용
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-lg-2">주문유형</td>
-                                <td class="col-lg-10">
-                                    <div class="row">
-                                        <div class="col-lg-2">
-                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                            <label class="form-check-label" for="">
-                                                픽업
-                                            </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>검색</td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>쿠폰명</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <input type="text" class="form-control" id="basicInput" />
+                                            </div>
                                         </div>
-                                        <div class="col-lg-2">
-                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                            <label class="form-check-label" for="">
-                                                배달
-                                            </label>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div id="memberCouponTable"></div>
+                            <script th:inline="javascript">
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    const memberCouponTable = new Tabulator("#memberCouponTable", {
+                                        height:"350px",
+                                        layout:"fitColumns",
+                                        columns:[
+                                            {title:"Name", field:"name", width:200},
+                                            {title:"Progress", field:"progress", hozAlign:"right", sorter:"number"},
+                                            {title:"Gender", field:"gender", widthGrow:2},
+                                            {title:"Rating", field:"rating", hozAlign:"center"},
+                                            {title:"Favourite Color", field:"col", widthGrow:3},
+                                            {title:"Date Of Birth", field:"dob", hozAlign:"center", sorter:"date", widthGrow:2},
+                                            {title:"Driver", field:"car", hozAlign:"center"},
+                                        ],
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div id="memberPointSection">
+                        <div class="row mb-2 justify-content-end">
+                            <div class="col-auto">
+                                <button type="button" id="searchPointBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                                    검색
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <table class="table table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td class="col-lg-2">발급일자</td>
+                                    <td class="col-lg-10">
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <input id="startDate" class="form-control" type="date" />
+                                            </div>
+                                            ~
+                                            <div class="col-lg-2">
+                                                <input id="endDate" class="form-control" type="date" />
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-lg-2">주문상태</td>
-                                <td class="col-lg-10">
-                                    <div class="row">
-                                        <div class="col-lg-2">
-                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                            <label class="form-check-label" for="">
-                                                임시저장
-                                            </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-lg-2">사용상태</td>
+                                    <td class="col-lg-10">
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <input type="radio" class="form-check-input" name="point" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    전체
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input type="radio" class="form-check-input" name="point" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    사용
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input type="radio" class="form-check-input" name="point" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    미사용
+                                                </label>
+                                            </div>
                                         </div>
-                                        <div class="col-lg-2">
-                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                            <label class="form-check-label" for="">
-                                                주문완료
-                                            </label>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div id="memberPointTable"></div>
+                            <script th:inline="javascript">
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    const memberPointTable = new Tabulator("#memberPointTable", {
+                                        height:"350px",
+                                        layout:"fitColumns",
+                                        columns:[
+                                            {title:"Name", field:"name", width:200},
+                                            {title:"Progress", field:"progress", hozAlign:"right", sorter:"number"},
+                                            {title:"Gender", field:"gender", widthGrow:2},
+                                            {title:"Rating", field:"rating", hozAlign:"center"},
+                                            {title:"Favourite Color", field:"col", widthGrow:3},
+                                            {title:"Date Of Birth", field:"dob", hozAlign:"center", sorter:"date", widthGrow:2},
+                                            {title:"Driver", field:"car", hozAlign:"center"},
+                                        ],
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div id="memberReviewSection">
+                        <div class="row mb-2 justify-content-end">
+                            <div class="col-auto">
+                                <button type="button" id="searchReviewBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                                    검색
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <table class="table table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td class="col-lg-2">등록일자</td>
+                                    <td class="col-lg-10">
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <input id="startDate" class="form-control" type="date" />
+                                            </div>
+                                            ~
+                                            <div class="col-lg-2">
+                                                <input id="endDate" class="form-control" type="date" />
+                                            </div>
                                         </div>
-                                        <div class="col-lg-2">
-                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                            <label class="form-check-label" for="">
-                                                픽업완료
-                                            </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-lg-2">리뷰유형</td>
+                                    <td class="col-lg-10">
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    매장리뷰
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                <label class="form-check-label" for="">
+                                                    상품리뷰
+                                                </label>
+                                            </div>
                                         </div>
-                                        <div class="col-lg-2">
-                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                            <label class="form-check-label" for="">
-                                                배달완료
-                                            </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>검색</td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>상품명</option>
+                                                    <option selected>상품아이디</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <input type="text" class="form-control" id="basicInput" />
+                                            </div>
                                         </div>
-                                        <div class="col-lg-2">
-                                            <input type="checkbox" class="form-check-input" id="" />
-                                            <label class="form-check-label" for="">
-                                                주문확정
-                                            </label>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>검색</td>
-                                <td>
-                                    <div class="row">
-                                        <div class="col-lg-2">
-                                            <select class="form-select" aria-label="Default select example">
-                                                <option selected>주문번호</option>
-                                                <option value="1">주문자</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <input type="text" class="form-control" id="basicInput" />
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div id="memberReviewTable"></div>
+                            <script th:inline="javascript">
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    const memberReviewTable = new Tabulator("#memberReviewTable", {
+                                        height:"350px",
+                                        layout:"fitColumns",
+                                        columns:[
+                                            {title:"Name", field:"name", width:200},
+                                            {title:"Progress", field:"progress", hozAlign:"right", sorter:"number"},
+                                            {title:"Gender", field:"gender", widthGrow:2},
+                                            {title:"Rating", field:"rating", hozAlign:"center"},
+                                            {title:"Favourite Color", field:"col", widthGrow:3},
+                                            {title:"Date Of Birth", field:"dob", hozAlign:"center", sorter:"date", widthGrow:2},
+                                            {title:"Driver", field:"car", hozAlign:"center"},
+                                        ],
+                                    });
+                                });
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script th:inline="javascript">
+        document.querySelectorAll("[name='memberHistory']").forEach(button => {
+            button.addEventListener('click', function() {
+                const orderSection = document.getElementById("memberOrderSection");
+                const couponSection = document.getElementById("memberCouponSection");
+                const pointSection = document.getElementById("memberPointSection");
+                const reviewSection = document.getElementById("memberReviewSection");
+
+                if (this.id === "memberOrder") {
+                    orderSection.style.display = "block";
+                    couponSection.style.display = "none";
+                    pointSection.style.display = "none";
+                    reviewSection.style.display = "none";
+                } else if (this.id === "memberCoupon") {
+                    orderSection.style.display = "none";
+                    couponSection.style.display = "block";
+                    pointSection.style.display = "none";
+                    reviewSection.style.display = "none";
+                } else if (this.id === "memberPoint") {
+                    orderSection.style.display = "none";
+                    couponSection.style.display = "none";
+                    pointSection.style.display = "block";
+                    reviewSection.style.display = "none";
+                } else {
+                    orderSection.style.display = "none";
+                    couponSection.style.display = "none";
+                    pointSection.style.display = "none";
+                    reviewSection.style.display = "block";
+                }
+            });
+        });
+
+        // 페이지 로드 시 초기 상태 설정 (필요하다면)
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const orderSection = document.getElementById("memberOrderSection");
+            const couponSection = document.getElementById("memberCouponSection");
+            const pointSection = document.getElementById("memberPointSection");
+            const reviewSection = document.getElementById("memberReviewSection");
+
+            if (orderSection && couponSection) {
+                orderSection.style.display = "block";
+                couponSection.style.display = "none";
+                pointSection.style.display = "none";
+                reviewSection.style.display = "none";
+            }
+        });
+    </script>
 </div>
