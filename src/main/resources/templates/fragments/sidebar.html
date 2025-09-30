@@ -6,13 +6,11 @@
             <div class="nav">
                 <div class="sb-sidenav-menu-heading">main</div>
                 <a class="nav-link" th:href="@{/dashboard}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     대시보드
                 </a>
 
                 <div class="sb-sidenav-menu-heading">Page</div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#member" aria-expanded="false" aria-controls="collapseLayouts">
-                    <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
                     회원
                     <div class="sb-sidenav-collapse-arrow"><i class="fa fa-angle-down"></i></div>
                 </a>
@@ -23,7 +21,6 @@
                     </nav>
                 </div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#product" aria-expanded="false" aria-controls="collapseLayouts">
-                    <div class="sb-nav-link-icon"><i class="fa-solid fa-bag-shopping"></i></div>
                     상품
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
@@ -34,24 +31,22 @@
                     </nav>
                 </div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#order" aria-expanded="false" aria-controls="collapseLayouts">
-                    <div class="sb-nav-link-icon"><i class="fa-solid fa-cart-shopping"></i></div>
                     주문
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
                 <div class="collapse" id="order" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="http://localhost:8080/order">주문관리</a>
+                        <a class="nav-link" th:href="@{/order}">주문관리</a>
                     </nav>
                 </div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#coupon" aria-expanded="false" aria-controls="collapseLayouts">
-                    <div class="sb-nav-link-icon"><i class="fa-solid fa-ticket"></i></div>
                     쿠폰
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
                 <div class="collapse" id="coupon" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="http://localhost:8080/coupon">쿠폰관리</a>
-                        <a class="nav-link" href="http://localhost:8080/coupon-statistics">쿠폰사용현황</a>
+                        <a class="nav-link" th:href="@{/coupon}">쿠폰관리</a>
+                        <a class="nav-link" th:href="@{/coupon-statistics}">쿠폰사용현황</a>
                     </nav>
                 </div>
                 <!--<div class="collapse" id="productPage" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
