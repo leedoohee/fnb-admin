@@ -1,0 +1,164 @@
+<div class="modal-dialog modal-xl modal-dialog-scrollable" th:fragment="member-popup">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="fullscreenModalLabel">회원상세</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    기본정보
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <td class="col-lg-2">회원명</td>
+                                <td class="col-lg-4">
+
+                                </td>
+                                <td class="col-lg-2">생년월일</td>
+                                <td class="col-lg-4">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-lg-2">휴대폰번호</td>
+                                <td class="col-lg-4">
+
+                                </td>
+                                <td class="col-lg-2">회원등급</td>
+                                <td class="col-lg-4">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    내역
+                </div>
+                <div class="card-body">
+                    <div class="row mb-2 justify-content-start">
+                        <div class="btn-group mb-4" role="group" aria-label="Basic checkbox toggle button group">
+                            <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btncheck1">주문내역</label>
+
+                            <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btncheck2">쿠폰내역</label>
+
+                            <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btncheck3">포인트내역</label>
+
+                            <input type="checkbox" class="btn-check" id="btncheck4" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btncheck4">리뷰내역</label>
+                        </div>
+                    </div>
+                    <div class="row mb-2 justify-content-end">
+                        <div class="col-auto">
+                            <button type="button" id="searchOrderBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                                검색
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <td class="col-lg-2">주문일자</td>
+                                <td class="col-lg-10">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <input id="startDate" class="form-control" type="date" />
+                                        </div>
+                                        ~
+                                        <div class="col-lg-2">
+                                            <input id="endDate" class="form-control" type="date" />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-lg-2">주문유형</td>
+                                <td class="col-lg-10">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                            <label class="form-check-label" for="">
+                                                픽업
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                            <label class="form-check-label" for="">
+                                                배달
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-lg-2">주문상태</td>
+                                <td class="col-lg-10">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                            <label class="form-check-label" for="">
+                                                임시저장
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                            <label class="form-check-label" for="">
+                                                주문완료
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                            <label class="form-check-label" for="">
+                                                픽업완료
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                            <label class="form-check-label" for="">
+                                                배달완료
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input type="checkbox" class="form-check-input" id="" />
+                                            <label class="form-check-label" for="">
+                                                주문확정
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>검색</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected>주문번호</option>
+                                                <option value="1">주문자</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <input type="text" class="form-control" id="basicInput" />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

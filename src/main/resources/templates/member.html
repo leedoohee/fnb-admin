@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Tables - SB Admin</title>
+        <title>상품관리</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
         <link href="/css/styles.css" rel="stylesheet" />
@@ -20,7 +20,7 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h3 class="mt-4 mb-4">주문관리</h3>
+                        <h3 class="mt-4 mb-4">회원관리</h3>
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
@@ -29,7 +29,7 @@
                             <div class="card-body">
                                 <div class="row mb-2 justify-content-end">
                                     <div class="col-auto">
-                                        <button type="button" id="searchOrderBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
                                             검색
                                         </button>
                                     </div>
@@ -38,7 +38,7 @@
                                     <table class="table table-bordered">
                                         <tbody>
                                         <tr>
-                                            <td class="col-lg-2">주문일자</td>
+                                            <td class="col-lg-2">가입일자</td>
                                             <td class="col-lg-10">
                                                 <div class="row">
                                                     <div class="col-lg-2">
@@ -52,56 +52,25 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-lg-2">주문유형</td>
+                                            <td class="col-lg-2">등급</td>
                                             <td class="col-lg-10">
                                                 <div class="row">
                                                     <div class="col-lg-2">
-                                                        <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
                                                         <label class="form-check-label" for="">
-                                                            픽업
+                                                            골드
                                                         </label>
                                                     </div>
                                                     <div class="col-lg-2">
-                                                        <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
                                                         <label class="form-check-label" for="">
-                                                            배달
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="col-lg-2">주문상태</td>
-                                            <td class="col-lg-10">
-                                                <div class="row">
-                                                    <div class="col-lg-2">
-                                                        <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                        <label class="form-check-label" for="">
-                                                            임시저장
+                                                            실버
                                                         </label>
                                                     </div>
                                                     <div class="col-lg-2">
-                                                        <input type="checkbox" class="form-check-input" id="infiniteQty" />
+                                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
                                                         <label class="form-check-label" for="">
-                                                            주문완료
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                        <label class="form-check-label" for="">
-                                                            픽업완료
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                        <label class="form-check-label" for="">
-                                                            배달완료
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <input type="checkbox" class="form-check-input" id="" />
-                                                        <label class="form-check-label" for="">
-                                                            주문확정
+                                                            브론즈
                                                         </label>
                                                     </div>
                                                 </div>
@@ -113,8 +82,9 @@
                                                 <div class="row">
                                                     <div class="col-lg-2">
                                                         <select class="form-select" aria-label="Default select example">
-                                                            <option selected>주문번호</option>
-                                                            <option value="1">주문자</option>
+                                                            <option selected>회원명</option>
+                                                            <option value="1">아이디</option>
+                                                            <option value="1">핸드폰번호</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-lg-4">
@@ -134,7 +104,7 @@
                                 리스트
                             </div>
                             <div class="card-body">
-                                <div id="orderListTable"></div>
+                                <div id="productListTable"></div>
                             </div>
                         </div>
                     </div>
@@ -153,7 +123,7 @@
                 </footer>
             </div>
             <div class="modal fade" id="fullscreenModal" tabindex="-1" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
-                <aside th:replace="fragments/popup/order-popup :: order-popup"></aside>
+                <aside th:replace="fragments/popup/member-popup :: member-popup"></aside>
             </div>
         </div>
     </body>
@@ -172,30 +142,32 @@
         editor.getMarkdown();
     });
 
-    const orderListTable = new Tabulator("#orderListTable", {
+    const productListTable = new Tabulator("#productListTable", {
         height:"500px",
         layout:"fitColumns",
         columns:[
-            {title:"주문번호", field:"orderId", width:150},
-            {title:"주문자", field:"memberName", width:100},
-            {title:"주문상태", field:"orderStatus", width:100},
-            {title:"주문일시", field:"orderDate", width:180},
-            {title:"총결제금액", field:"totalAmount", hozAlign:"right", sorter:"number", width:120},
-            {title:"결제상태", field:"paymentStatus", width:100},
-            {title:"결제일시", field:"paymentDate", width:180},
-            {title:"결제유형", field:"paymentType", width:100},
-            {title:"실결제금액", field:"paymentAmount", hozAlign:"right", sorter:"number", width:120},
+            {title:"Name", field:"name", width:200},
+            {title:"Progress", field:"progress", hozAlign:"right", sorter:"number"},
+            {title:"Gender", field:"gender", widthGrow:2},
+            {title:"Rating", field:"rating", hozAlign:"center"},
+            {title:"Favourite Color", field:"col", widthGrow:3},
+            {title:"Date Of Birth", field:"dob", hozAlign:"center", sorter:"date", widthGrow:2},
+            {title:"Driver", field:"car", hozAlign:"center"},
         ],
     });
 
-    document.querySelector("#searchOrderBtn").addEventListener("click", function() {
-        fetch('http://localhost:8080/order/list?startDate=2023-01-01&endDate=2023-12-31&page=1&size=20')
-            .then(response => response.json())
-            .then(data => {
-                orderListTable.setData(data);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
+    const basicOptionTable = new Tabulator("#basicOptionTable", {
+        height:"300px",
+        layout:"fitColumns",
+        columns:[
+            {title:"Name", field:"name", width:200},
+            {title:"Progress", field:"progress", hozAlign:"right", sorter:"number"},
+            {title:"Gender", field:"gender", widthGrow:2},
+            {title:"Rating", field:"rating", hozAlign:"center"},
+            {title:"Favourite Color", field:"col", widthGrow:3},
+            {title:"Date Of Birth", field:"dob", hozAlign:"center", sorter:"date", widthGrow:2},
+            {title:"Driver", field:"car", hozAlign:"center"},
+        ],
     });
+
 </script>

@@ -29,6 +29,11 @@ public class ProductController {
         return "product.html";
     }
 
+    @GetMapping("/product-option")
+    public String productOption() {
+        return "product-option.html";
+    }
+
     @PostMapping("/product")
     public ResponseEntity<Boolean> create(CreateProductRequest createProductRequest) {
         return ResponseEntity.ok(this.productService.create(createProductRequest));

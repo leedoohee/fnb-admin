@@ -20,11 +20,49 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h3 class="mt-4 mb-4">상품관리</h3>
+                        <h3 class="mt-4 mb-4">상품옵션관리</h3>
+                        <div class="card-group" style="height: 350px;">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-1"></i>
+                                    옵션구분
+                                </div>
+                                <div class="card-body">
+                                    <div class="list-group">
+                                        <a href="#" class="list-group-item list-group-item-action">기본</a>
+                                        <a href="#" class="list-group-item list-group-item-action">추가</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-1"></i>
+                                    옵션그룹
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item active" aria-current="true">맛</li>
+                                        <li class="list-group-item">사이즈</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-1"></i>
+                                    옵션
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item active" aria-current="true">맛</li>
+                                        <li class="list-group-item">사이즈</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                검색조건
+                                옵션등록
                             </div>
                             <div class="card-body">
                                 <div class="row mb-2 justify-content-end">
@@ -33,31 +71,12 @@
                                             등록
                                         </button>
                                     </div>
-                                    <div class="col-auto">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
-                                            검색
-                                        </button>
-                                    </div>
                                 </div>
                                 <div class="row">
                                     <table class="table table-bordered">
                                         <tbody>
                                         <tr>
-                                            <td class="col-lg-2">등록일자</td>
-                                            <td class="col-lg-10">
-                                                <div class="row">
-                                                    <div class="col-lg-2">
-                                                        <input id="startDate" class="form-control" type="date" />
-                                                    </div>
-                                                    ~
-                                                    <div class="col-lg-2">
-                                                        <input id="endDate" class="form-control" type="date" />
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="col-lg-2">상품유형</td>
+                                            <td class="col-lg-2">옵션구분</td>
                                             <td class="col-lg-10">
                                                 <div class="row">
                                                     <div class="col-lg-2">
@@ -69,74 +88,70 @@
                                                     <div class="col-lg-2">
                                                         <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
                                                         <label class="form-check-label" for="">
-                                                            옵션형
+                                                            추가형
                                                         </label>
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-lg-2">상품상태</td>
+                                            <td class="col-lg-2">옵션그룹</td>
+                                            <td class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="dropdown">
+                                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                           Dropdown link
+                                                        </a>
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                                            <li><hr class="dropdown-divider"></li>
+                                                            <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-2">옵션명</td>
+                                            <td class="col-lg-10">
+                                                <div class="col-lg-6">
+                                                    <input type="text" class="form-control" id="" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-2">설명</td>
+                                            <td class="col-lg-10">
+                                                <div class="col-lg-6">
+                                                    <input type="text" class="form-control" id="" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-2">가격</td>
+                                            <td class="col-lg-10">
+                                                <div class="col-lg-6">
+                                                    <input type="text" class="form-control" id="" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-2">사용여부</td>
                                             <td class="col-lg-10">
                                                 <div class="row">
                                                     <div class="col-lg-2">
                                                         <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
                                                         <label class="form-check-label" for="">
-                                                            전체
+                                                            사용
                                                         </label>
                                                     </div>
                                                     <div class="col-lg-2">
                                                         <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
                                                         <label class="form-check-label" for="">
-                                                            판매중
+                                                            미사용
                                                         </label>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
-                                                        <label class="form-check-label" for="">
-                                                            판매중지
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="col-lg-2">판매형태</td>
-                                            <td class="col-lg-10">
-                                                <div class="row">
-                                                    <div class="col-lg-2">
-                                                        <input class="form-check-input" type="checkbox" value="" id="">
-                                                        <label class="form-check-label" for="">
-                                                            픽업+배달
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <input class="form-check-input" type="checkbox" value="" id="">
-                                                        <label class="form-check-label" for="">
-                                                            픽업
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <input class="form-check-input" type="checkbox" value="" id="">
-                                                        <label class="form-check-label" for="">
-                                                            배달
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>검색</td>
-                                            <td>
-                                                <div class="row">
-                                                    <div class="col-lg-2">
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>상품명</option>
-                                                            <option value="1">상품코드</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <input type="text" class="form-control" id="basicInput" />
                                                     </div>
                                                 </div>
                                             </td>
@@ -144,15 +159,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                리스트
-                            </div>
-                            <div class="card-body">
-                                <div id="productListTable"></div>
                             </div>
                         </div>
                     </div>
