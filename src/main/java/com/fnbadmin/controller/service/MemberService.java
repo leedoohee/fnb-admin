@@ -1,8 +1,11 @@
 package com.fnbadmin.controller.service;
 
 import com.fnbadmin.controller.repository.MemberRepository;
+import com.fnbadmin.controller.request.MemberListRequest;
 import com.fnbadmin.controller.response.MemberGradeListResponse;
 import com.fnbadmin.controller.response.MemberInfoResponse;
+import com.fnbadmin.controller.response.MemberListResponse;
+import com.fnbadmin.controller.response.MemberPageResponse;
 import com.fnbadmin.domain.Member;
 import com.fnbadmin.domain.MemberCoupon;
 import com.fnbadmin.domain.MemberGrade;
@@ -20,10 +23,36 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
+    public MemberPageResponse getList(MemberListRequest memberListRequest) {
+        Long totalCount     = this.memberRepository.getTotalMemberCount();
+        int lastPageNumber  = (int) (Math.ceil((double) totalCount / memberListRequest.getPageLimit()));
+        List<MemberListResponse> responses = new ArrayList<>();
+        List<Member> members = this.memberRepository.findMembers(memberListRequest.getPage(), memberListRequest.getPageLimit());
+
+        for (Member member : members) {
+            responses.add(MemberListResponse.builder()
+                    .memberId(member.getMemberId())
+                    .name(member.getName())
+                    .email(member.getEmail())
+                    .joinDate(String.valueOf(member.getJoinDate()))
+                    .phoneNumber(member.getPhoneNumber())
+                    .points(member.getPoints())
+                    .memberGrade(member.getMemberGrade())
+                    .ownedCouponCount(member.getOwnedCouponCount())
+                    .totalOrderCount(member.getTotalOrderCount())
+                    .build());
+        }
+
+
+
+        return MemberPageResponse.builder()
+                .last_page(lastPageNumber)
+                .data(responses).build();
+    }
+
     public MemberInfoResponse getInfo(String memberId) {
 
         Member member = this.memberRepository.findMemberById(memberId);
-        List<MemberCoupon> memberCoupons = this.memberRepository.findMemberCoupons(member.getId());
 
         return MemberInfoResponse.builder()
                 .id(member.getId())
@@ -43,7 +72,6 @@ public class MemberService {
                 .lastLoginDate(String.valueOf(member.getLastLoginDate()))
                 .lastLoginIp(member.getLastLoginIp())
                 .grade(member.getGrade())
-                .memberCoupons(memberCoupons)
                 .build();
     }
 

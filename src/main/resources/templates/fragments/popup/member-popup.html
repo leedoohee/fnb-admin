@@ -5,6 +5,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+            <input type="hidden" id="memberId"/>
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-table me-1"></i>
@@ -16,20 +17,20 @@
                             <tbody>
                             <tr>
                                 <td class="col-lg-2">회원명</td>
-                                <td class="col-lg-4">
+                                <td class="col-lg-4" id="name">
 
                                 </td>
                                 <td class="col-lg-2">생년월일</td>
-                                <td class="col-lg-4">
+                                <td class="col-lg-4" id="birthDate">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-lg-2">휴대폰번호</td>
-                                <td class="col-lg-4">
+                                <td class="col-lg-4" id="phoneNumber">
 
                                 </td>
                                 <td class="col-lg-2">회원등급</td>
-                                <td class="col-lg-4">
+                                <td class="col-lg-4" id="memberGrade">
                                 </td>
                             </tr>
                             </tbody>
@@ -461,7 +462,7 @@
             const pointSection = document.getElementById("memberPointSection");
             const reviewSection = document.getElementById("memberReviewSection");
 
-            if (orderSection && couponSection) {
+            if (orderSection && couponSection && pointSection && reviewSection) {
                 orderSection.style.display = "block";
                 couponSection.style.display = "none";
                 pointSection.style.display = "none";

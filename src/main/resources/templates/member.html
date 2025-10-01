@@ -96,24 +96,54 @@
                             리스트
                         </div>
                         <div class="card-body">
-                            <div id="productListTable"></div>
+                            <div id="memberListTable"></div>
                         </div>
                         <script th:inline="javascript">
                             document.addEventListener("DOMContentLoaded", function() {
-                                const productListTable = new Tabulator("#productListTable", {
+                                const memberListTable = new Tabulator("#memberListTable", {
                                     height:"500px",
-                                    layout:"fitColumns",
+                                    pagination: true,
+                                    paginationMode: "remote",
+                                    paginationCounter:"pages",
+                                    ajaxURL: "http://localhost:8080/member/list",
+                                    ajaxParams: { page: "1", pageLimit: "50"},
+                                    ajaxResponse:function(url, params, response){
+                                        return response;
+                                    },
                                     columns:[
-                                        {title:"Name", field:"name", width:200},
-                                        {title:"Progress", field:"progress", hozAlign:"right", sorter:"number"},
-                                        {title:"Gender", field:"gender", widthGrow:2},
-                                        {title:"Rating", field:"rating", hozAlign:"center"},
-                                        {title:"Favourite Color", field:"col", widthGrow:3},
-                                        {title:"Date Of Birth", field:"dob", hozAlign:"center", sorter:"date", widthGrow:2},
-                                        {title:"Driver", field:"car", hozAlign:"center"},
-                                    ],
+                                        {title:"아이디", field:"memberId", width:100, cellClick: function(e, cell){
+                                            const targetElement = document.querySelector('[data-bs-target="#fullscreenModal"]');
+                                            fetch(`http://localhost:8080/member/${cell.getValue()}`)
+                                                .then(response => {
+                                                    if (!response.ok) {
+                                                        throw new Error(`HTTP error! status: ${response.status}`);
+                                                    }
+                                                    return response.json();
+                                                })
+                                                .then(data => {
+                                                    document.querySelector("#memberId").innerHTML = data.memberId;
+                                                    document.querySelector("#name").innerHTML = data.name;
+                                                    document.querySelector("#birthDate").innerHTML = data.birthDate;
+                                                    document.querySelector("#phoneNumber").innerHTML = data.phoneNumber;
+                                                    document.querySelector("#memberGrade").innerHTML = data.memberGrade;
+
+                                                    if (targetElement) {
+                                                        targetElement.click();
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error fetching data:', error);
+                                                });
+                                        }},
+                                        {title:"이름", field:"name", width:100},
+                                        {title:"핸드폰번호", field:"phoneNumber", hozAlign:"center"},
+                                        {title:"등급", field:"memberGrade", width:100 },
+                                        {title:"쿠폰수", field:"ownedCouponCount", hozAlign:"center", width:100},
+                                        {title:"주문수", field:"totalOrderCount", width:100}
+                                    ]
                                 });
                             });
+
                         </script>
                     </div>
                 </div>
