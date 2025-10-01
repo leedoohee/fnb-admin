@@ -5,13 +5,13 @@ import com.fnbadmin.controller.request.MemberListRequest;
 import com.fnbadmin.controller.response.MemberGradeListResponse;
 import com.fnbadmin.controller.response.MemberInfoResponse;
 import com.fnbadmin.controller.response.MemberListResponse;
-import com.fnbadmin.controller.response.MemberPageResponse;
+import com.fnbadmin.controller.response.PageResponse;
 import com.fnbadmin.domain.Member;
-import com.fnbadmin.domain.MemberCoupon;
 import com.fnbadmin.domain.MemberGrade;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -23,7 +23,7 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public MemberPageResponse getList(MemberListRequest memberListRequest) {
+    public PageResponse<MemberListResponse> getList(MemberListRequest memberListRequest) {
         Long totalCount     = this.memberRepository.getTotalMemberCount();
         int lastPageNumber  = (int) (Math.ceil((double) totalCount / memberListRequest.getPageLimit()));
         List<MemberListResponse> responses = new ArrayList<>();
@@ -43,11 +43,10 @@ public class MemberService {
                     .build());
         }
 
-
-
-        return MemberPageResponse.builder()
+        return PageResponse.<MemberListResponse>builder()
                 .last_page(lastPageNumber)
-                .data(responses).build();
+                .data(responses)
+                .build();
     }
 
     public MemberInfoResponse getInfo(String memberId) {

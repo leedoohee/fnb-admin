@@ -29,14 +29,14 @@
                                 <td class="col-lg-10">
                                     <div class="row">
                                         <div class="col-lg-2">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
-                                            <label class="form-check-label" for="">
+                                            <input class="form-check-input" type="radio" name="productType" id="productType1" value="1">
+                                            <label class="form-check-label" for="productType1">
                                                 기본형
                                             </label>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
-                                            <label class="form-check-label" for="">
+                                            <input class="form-check-input" type="radio" name="productType" id="productType2" value="2">
+                                            <label class="form-check-label" for="productType2">
                                                 옵션형
                                             </label>
                                         </div>
@@ -48,26 +48,26 @@
                                 <td class="col-lg-10">
                                     <div class="row">
                                         <div class="col-lg-2">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
-                                            <label class="form-check-label" for="">
+                                            <input class="form-check-input" type="radio" name="status" id="statusALL" value="ALL">
+                                            <label class="form-check-label" for="statusALL">
                                                 전체
                                             </label>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
-                                            <label class="form-check-label" for="">
+                                            <input class="form-check-input" type="radio" name="status" id="statusSALE" value="SALE">
+                                            <label class="form-check-label" for="statusSALE">
                                                 판매중
                                             </label>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
-                                            <label class="form-check-label" for="">
+                                            <input class="form-check-input" type="radio" name="status" id="statusSTOP" value="SOLDOUT">
+                                            <label class="form-check-label" for="statusSTOP">
                                                 판매중지
                                             </label>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
-                                            <label class="form-check-label" for="">
+                                            <input class="form-check-input" type="radio" name="status" id="statusPENDING" value="PENDING">
+                                            <label class="form-check-label" for="statusPENDING">
                                                 판매대기
                                             </label>
                                         </div>
@@ -79,20 +79,20 @@
                                 <td class="col-lg-10">
                                     <div class="row">
                                         <div class="col-lg-2">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
-                                            <label class="form-check-label" for="">
+                                            <input class="form-check-input" type="radio" name="saleForm" id="saleFormBoth" value="BOTH">
+                                            <label class="form-check-label" for="saleFormBoth">
                                                 픽업+배달
                                             </label>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
-                                            <label class="form-check-label" for="">
+                                            <input class="form-check-input" type="radio" name="saleForm" id="saleFormPickup" value="PICKUP">
+                                            <label class="form-check-label" for="saleFormPickup">
                                                 픽업
                                             </label>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
-                                            <label class="form-check-label" for="">
+                                            <input class="form-check-input" type="radio" name="saleForm" id="saleFormDelivery" value="DELIVERY">
+                                            <label class="form-check-label" for="saleFormDelivery">
                                                 배달
                                             </label>
                                         </div>
@@ -117,8 +117,8 @@
                                             <input type="number" class="form-control" id="quantity" placeholder="판매가능수량"/>
                                         </div>
                                         <div class="col-lg-3">
-                                            <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                            <label class="form-check-label" for="">
+                                            <input type="checkbox" class="form-check-input" id="isInfiniteQty" />
+                                            <label class="form-check-label" for="isInfiniteQty">
                                                 제한없음
                                             </label>
                                         </div>
@@ -227,6 +227,28 @@
                     </div>
                 </div>
             </div>
+            <script th:inline="javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    const editor = new toastui.Editor({
+                        el: document.querySelector('#editor'),
+                        previewStyle: 'vertical',
+                        height: '500px'
+                    });
+
+                    editor.getMarkdown();
+                });
+
+                const basicOptionTable = new Tabulator("#basicOptionTable", {
+                    height:"300px",
+                    columns:[
+                        {title:"아이디", field:"optionId", width:100},
+                        {title:"옵션타입", field:"optionType", hozAlign:"right"},
+                        {title:"옵션그룹", field:"optionGroupId"},
+                        {title:"옵션명", field:"name", hozAlign:"center"},
+                        {title:"가격", field:"price"}
+                    ]
+                });
+            </script>
         </div>
     </div>
 </div>

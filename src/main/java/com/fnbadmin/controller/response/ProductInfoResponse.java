@@ -1,7 +1,5 @@
 package com.fnbadmin.controller.response;
 
-import com.fnbadmin.domain.AdditionalOption;
-import com.fnbadmin.domain.ProductOption;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +30,5 @@ public class ProductInfoResponse {
     private String updatedBy;
 
     private List<ProductOptionResponse> productOptions;
-    private List<AdditionalOptionResponse> additionalOptions;
 
 }

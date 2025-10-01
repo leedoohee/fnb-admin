@@ -32,13 +32,13 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                /*.authorizeHttpRequests(authorize -> authorize
+                .authorizeHttpRequests(authorize -> authorize
                         // 인증 및 토큰 발급 경로는 모두 접근 허용
                         //.requestMatchers("/auth/login", "/auth/register").permitAll()
                         // 그 외 모든 요청은 인증(토큰) 필요
                         //.anyRequest().authenticated()
-                        //.requestMatchers("/**").permitAll()
-                )*/
+                        .requestMatchers("/**").permitAll()
+                )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
 

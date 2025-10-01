@@ -29,6 +29,15 @@ public class ProductOption {
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
 
+    @Column(name = "option_id", nullable = false)
+    private int optionId;
+
+    @Column(name = "option_group_id", unique = true, nullable = false, length = 36)
+    private String optionGroupId; // UUID 사용을 가정하고 필드명 변경
+
+    @Column(name = "option_type", nullable = false, length = 20)
+    private String optionType;
+
     // Foreign Key reference to the Product entity
     @Column(name = "product_id", nullable = false)
     private int productId;

@@ -2,10 +2,7 @@ package com.fnbadmin.controller;
 
 import com.fnbadmin.controller.request.CreateProductRequest;
 import com.fnbadmin.controller.request.ProductRequest;
-import com.fnbadmin.controller.response.AdditionalOptionResponse;
-import com.fnbadmin.controller.response.ProductInfoResponse;
-import com.fnbadmin.controller.response.ProductListResponse;
-import com.fnbadmin.controller.response.ProductOptionResponse;
+import com.fnbadmin.controller.response.*;
 import com.fnbadmin.controller.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -40,7 +37,7 @@ public class ProductController {
     }
 
     @GetMapping("/product/list")
-    public ResponseEntity<List<ProductListResponse>> getProducts(ProductRequest productRequest) {
+    public ResponseEntity<PageResponse> getProducts(ProductRequest productRequest) {
         return ResponseEntity.ok(this.productService.getList(productRequest));
     }
 
@@ -52,10 +49,5 @@ public class ProductController {
     @GetMapping("/product/option/list")
     public ResponseEntity<List<ProductOptionResponse>> getProductOptions() {
         return ResponseEntity.ok(this.productService.getAllProductOptions());
-    }
-
-    @GetMapping("/product/additional-option/list")
-    public ResponseEntity<List<AdditionalOptionResponse>> getAdditionalOptions() {
-        return ResponseEntity.ok(this.productService.getAllAdditionalOptions());
     }
 }

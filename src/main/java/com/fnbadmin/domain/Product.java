@@ -83,6 +83,4 @@ public class Product {
     @Transient
     private List<ProductOption> productOptions;
 
-    @Transient
-    private List<AdditionalOption> additionalOptions;
 }

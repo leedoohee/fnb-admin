@@ -3,7 +3,7 @@ package com.fnbadmin.controller;
 import com.fnbadmin.controller.request.MemberListRequest;
 import com.fnbadmin.controller.response.MemberGradeListResponse;
 import com.fnbadmin.controller.response.MemberInfoResponse;
-import com.fnbadmin.controller.response.MemberPageResponse;
+import com.fnbadmin.controller.response.PageResponse;
 import com.fnbadmin.controller.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,12 +32,12 @@ public class MemberController {
     }
 
     @GetMapping("/member/list")
-    public ResponseEntity<MemberPageResponse> getMembers(MemberListRequest memberListRequest) {
+    public ResponseEntity<PageResponse> getMembers(MemberListRequest memberListRequest) {
         return ResponseEntity.ok(this.memberService.getList(memberListRequest));
     }
 
     @GetMapping("/member/{memberId}")
-    public ResponseEntity<MemberInfoResponse> getInfo(@PathVariable String memberId) {
+    public ResponseEntity<MemberInfoResponse> getInfo(@PathVariable("memberId") String memberId) {
         return ResponseEntity.ok(this.memberService.getInfo(memberId));
     }
 

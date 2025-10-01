@@ -18,9 +18,9 @@ public class OrderRepository {
     }
 
     public List<Order> findOrders(String startDate, String endDate, String status, int page, int pageLimit) {
-        return this.em.createQuery("select o from Order o where o.orderDate between :startDate and :endDate", Order.class)
-                .setParameter("startDate", startDate)
-                .setParameter("endDate", endDate)
+        return this.em.createQuery("select o from Order o", Order.class)
+                //.setParameter("startDate", startDate)
+                //.setParameter("endDate", endDate)
                 .getResultList();
     }
 

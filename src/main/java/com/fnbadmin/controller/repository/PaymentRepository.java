@@ -17,7 +17,7 @@ public class PaymentRepository {
         this.em = entityManager;
     }
 
-    public List<Payment> findPayments(String orderIds) {
+    public List<Payment> findPayments(List<String> orderIds) {
         return this.em.createQuery("select p from Payment p where p.orderId in (:orderIds)", Payment.class)
                 .setParameter("orderIds", orderIds)
                 .getResultList();

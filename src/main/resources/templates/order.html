@@ -131,30 +131,27 @@
                         <script th:inline="javascript">
                             const orderListTable = new Tabulator("#orderListTable", {
                                 height:"500px",
-                                layout:"fitColumns",
+                                pagination: true,
+                                paginationMode: "remote",
+                                paginationCounter:"pages",
+                                ajaxURL: "http://localhost:8080/order/list",
+                                ajaxParams: { page: "1", pageLimit: "50"},
+                                ajaxResponse:function(url, params, response){
+                                    return response;
+                                },
                                 columns:[
                                     {title:"주문번호", field:"orderId", width:150},
                                     {title:"주문자", field:"memberName", width:100},
                                     {title:"주문상태", field:"orderStatus", width:100},
                                     {title:"주문일시", field:"orderDate", width:180},
-                                    {title:"총결제금액", field:"totalAmount", hozAlign:"right", sorter:"number", width:120},
-                                    {title:"결제상태", field:"paymentStatus", width:100},
-                                    {title:"결제일시", field:"paymentDate", width:180},
                                     {title:"결제유형", field:"paymentType", width:100},
+                                    {title:"결제상태", field:"paymentStatus", width:100},
+                                    {title:"총결제금액", field:"totalAmount", hozAlign:"right", sorter:"number", width:120},
                                     {title:"실결제금액", field:"paymentAmount", hozAlign:"right", sorter:"number", width:120},
+                                    {title:"결제일시", field:"paymentDate", width:180},
                                 ],
                             });
 
-                            document.querySelector("#searchOrderBtn").addEventListener("click", function() {
-                                fetch('http://localhost:8080/order/list?startDate=2023-01-01&endDate=2023-12-31&page=1&size=20')
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        orderListTable.setData(data);
-                                    })
-                                    .catch(error => {
-                                        console.error('Error fetching data:', error);
-                                    });
-                            });
                         </script>
                     </div>
                 </div>

@@ -3,6 +3,7 @@ package com.fnbadmin.controller;
 import com.fnbadmin.controller.request.OrderRequest;
 import com.fnbadmin.controller.response.OrderInfoResponse;
 import com.fnbadmin.controller.response.OrderListResponse;
+import com.fnbadmin.controller.response.PageResponse;
 import com.fnbadmin.controller.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,7 @@ public class OrderController {
     }
 
     @GetMapping("/order/list")
-    public ResponseEntity<List<OrderListResponse>> getOrders(OrderRequest orderRequest) {
+    public ResponseEntity<PageResponse<OrderListResponse>> getOrders(OrderRequest orderRequest) {
         return ResponseEntity.ok(this.orderService.getList(orderRequest));
     }
 

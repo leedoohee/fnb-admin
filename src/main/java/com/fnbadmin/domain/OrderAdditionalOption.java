@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor // Required for JPA entities, especially with @Builder and @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "order_additional_option")
 public class OrderAdditionalOption {
 

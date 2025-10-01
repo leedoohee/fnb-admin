@@ -5,11 +5,7 @@ import com.fnbadmin.controller.request.CreateAdditionalOptRequest;
 import com.fnbadmin.controller.request.CreateProductOptionRequest;
 import com.fnbadmin.controller.request.CreateProductRequest;
 import com.fnbadmin.controller.request.ProductRequest;
-import com.fnbadmin.controller.response.AdditionalOptionResponse;
-import com.fnbadmin.controller.response.ProductInfoResponse;
-import com.fnbadmin.controller.response.ProductListResponse;
-import com.fnbadmin.controller.response.ProductOptionResponse;
-import com.fnbadmin.domain.AdditionalOption;
+import com.fnbadmin.controller.response.*;
 import com.fnbadmin.domain.Product;
 import com.fnbadmin.domain.ProductOption;
 import org.springframework.stereotype.Service;
@@ -18,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -40,20 +37,18 @@ public class ProductService {
         }
 
         createProductRequest.getProductOptions().forEach(po -> po.setProductId(productId));
-        createProductRequest.getAdditionalOptions().forEach(ao -> ao.setProductId(productId));
 
         // 이미지 업로드
         int optionLength            = this.insertProductOptions(createProductRequest);
-        int additionalOptionLength  = this.insertAdditionalOption(createProductRequest);
 
-        if (optionLength < 0 || additionalOptionLength < 0) {
+        if (optionLength < 0) {
             return false;
         }
 
         return true;
     }
 
-    public List<ProductListResponse> getList(ProductRequest productRequest) {
+    public PageResponse<ProductListResponse> getList(ProductRequest productRequest) {
         List<ProductListResponse> responses = new ArrayList<>();
 
         List<Product> products = this.productRepository.findProducts(productRequest.getStartDate(),
@@ -74,33 +69,26 @@ public class ProductService {
                             .build());
         }
 
-        return responses;
+        return PageResponse.<ProductListResponse>builder()
+                .last_page(1)
+                .data(responses)
+                .build();
     }
 
     public ProductInfoResponse getInfo(int productId) {
         Product product                                             = this.productRepository.findProductById(productId);
         List<ProductOption> productOptions                          = this.productRepository.findProductOptions(productId);
-        List<AdditionalOption> additionalOptions                    = this.productRepository.findAdditionalOptions(productId);
         List<ProductOptionResponse> productOptionResponses          = new ArrayList<>();
-        List<AdditionalOptionResponse> additionalOptionResponses    = new ArrayList<>();
 
         for (ProductOption productOption : productOptions) {
             productOptionResponses.add(ProductOptionResponse.builder()
-                    .id(productOption.getId())
+                    .optionId(productOption.getOptionId())
+                    .optionType(productOption.getOptionType())
+                    .optionGroupId(productOption.getOptionGroupId())
                     .name(productOption.getName())
                     .price(productOption.getPrice())
                     .createdAt(String.valueOf(productOption.getCreatedAt()))
                     .updatedAt(String.valueOf(productOption.getUpdatedAt()))
-                    .build());
-        }
-
-        for (AdditionalOption additionalOption : additionalOptions) {
-            additionalOptionResponses.add(AdditionalOptionResponse.builder()
-                    .id(additionalOption.getId())
-                    .name(additionalOption.getName())
-                    .price(additionalOption.getPrice())
-                    .createdAt(additionalOption.getCreatedAt())
-                    .updatedAt(additionalOption.getUpdatedAt())
                     .build());
         }
 
@@ -124,7 +112,6 @@ public class ProductService {
                 .createdBy(product.getCreatedBy())
                 .updatedBy(product.getUpdatedBy())
                 .productOptions(productOptionResponses)
-                .additionalOptions(additionalOptionResponses)
                 .build();
     }
 
@@ -134,28 +121,11 @@ public class ProductService {
 
         for (ProductOption productOption : productOptions) {
             responses.add(ProductOptionResponse.builder()
-                    .id(productOption.getId())
+                    .optionId(productOption.getOptionId())
                     .name(productOption.getName())
                     .price(productOption.getPrice())
                     .createdAt(String.valueOf(productOption.getCreatedAt()))
                     .updatedAt(String.valueOf(productOption.getUpdatedAt()))
-                    .build());
-        }
-
-        return responses;
-    }
-
-    public List<AdditionalOptionResponse> getAllAdditionalOptions() {
-        List<AdditionalOption> additionalOptions = this.productRepository.findAllAdditionalOptions();
-        List<AdditionalOptionResponse> responses = new ArrayList<>();
-
-        for (AdditionalOption additionalOption : additionalOptions) {
-            responses.add(AdditionalOptionResponse.builder()
-                    .id(additionalOption.getId())
-                    .name(additionalOption.getName())
-                    .price(additionalOption.getPrice())
-                    .createdAt(additionalOption.getCreatedAt())
-                    .updatedAt(additionalOption.getUpdatedAt())
                     .build());
         }
 
@@ -209,29 +179,5 @@ public class ProductService {
         }
 
         return this.productRepository.insertProductOptions(elements);
-    }
-
-    private int insertAdditionalOption(CreateProductRequest createProductRequest) {
-        List<CreateAdditionalOptRequest> additionalOptions = createProductRequest.getAdditionalOptions();
-        List<AdditionalOption> elements = new ArrayList<>();
-
-        if (additionalOptions == null || additionalOptions.isEmpty()) {
-            return 0;
-        }
-
-        for (CreateAdditionalOptRequest createAdditionalOptRequest : additionalOptions) {
-            elements.add(AdditionalOption.builder()
-                    .productId(createAdditionalOptRequest.getProductId())
-                    .name(createAdditionalOptRequest.getName())
-                    .price(createAdditionalOptRequest.getPrice())
-                    .isUse(createAdditionalOptRequest.getIsUse())
-                    .createdAt(new Date().toString())
-                    .updatedAt(new Date().toString())
-                    .createdBy("admin")
-                    .updatedBy("admin")
-                    .build());
-        }
-
-        return this.productRepository.insertAdditionalOptions(elements);
     }
 }

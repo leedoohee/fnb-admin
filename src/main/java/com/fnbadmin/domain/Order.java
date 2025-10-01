@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "member_order")
+@Table(name = "order_master")
 public class Order {
 
     @Id

@@ -3,8 +3,10 @@ package com.fnbadmin.controller.service;
 import com.fnbadmin.controller.repository.OrderRepository;
 import com.fnbadmin.controller.repository.PaymentRepository;
 import com.fnbadmin.controller.request.OrderRequest;
+import com.fnbadmin.controller.response.MemberListResponse;
 import com.fnbadmin.controller.response.OrderInfoResponse;
 import com.fnbadmin.controller.response.OrderListResponse;
+import com.fnbadmin.controller.response.PageResponse;
 import com.fnbadmin.domain.Order;
 import com.fnbadmin.domain.OrderAdditionalOption;
 import com.fnbadmin.domain.OrderProduct;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -26,16 +29,18 @@ public class OrderService {
         this.paymentRepository = paymentRepository;
     }
 
-    public List<OrderListResponse> getList(OrderRequest orderRequest) {
+    public PageResponse<OrderListResponse> getList(OrderRequest orderRequest) {
         List<OrderListResponse> responses = new ArrayList<>();
+        int totalCount= 3;
 
         List<Order> orders = orderRepository.findOrders(orderRequest.getStartDate(),
                 orderRequest.getEndDate(), orderRequest.getOrderStatus(),
                 orderRequest.getPage(), orderRequest.getPageLimit());
 
+        int lastPageNumber  = (int) (Math.ceil((double) totalCount / orderRequest.getPageLimit()));
+
         List<String> orderIdList             = orders.stream().map(Order::getOrderId).toList();
-        String orderIds                      = String.join(",", orderIdList);
-        List<Payment> payments               = this.paymentRepository.findPayments(orderIds);
+        List<Payment> payments               = this.paymentRepository.findPayments(orderIdList);
 
         for (Order order : orders) {
             payments.stream().filter(payment -> payment.getOrderId().equals(order.getOrderId()))
@@ -55,7 +60,10 @@ public class OrderService {
                     .build());
         }
 
-        return responses;
+        return PageResponse.<OrderListResponse>builder()
+                .last_page(lastPageNumber)
+                .data(responses)
+                .build();
     }
 
     public OrderInfoResponse getInfo(String orderId) {
