@@ -85,6 +85,8 @@ public class MemberService {
                     .description(grade.getDescription())
                     .discountType(grade.getDiscountType())
                     .discountRate(grade.getDiscountRate())
+                    .minOrderAmount(grade.getMinOrderAmount())
+                    .maxOrderAmount(grade.getMaxOrderAmount())
                     .build());
         }
 

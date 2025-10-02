@@ -43,7 +43,7 @@ public class MemberController {
     }
 
     @GetMapping("/member-grade/list")
-    public ResponseEntity<List<MemberGradeListResponse>> getGradeList() {
+    public ResponseEntity<List<MemberGradeListResponse>> getGrades() {
         return ResponseEntity.ok(this.memberService.getAllGrades());
     }
 }
