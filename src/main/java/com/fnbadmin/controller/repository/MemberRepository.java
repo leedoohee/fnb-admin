@@ -27,16 +27,14 @@ public class MemberRepository {
     }
 
     public Long getTotalMemberCount(MemberListRequest memberListRequest) {
+        List<Predicate> searchConditions = new ArrayList<>();
         //TODO 제네릭으로 공통으로 뻬기
         CriteriaBuilder cb          = em.getCriteriaBuilder();
         CriteriaQuery<Long> cq      = cb.createQuery(Long.class);
         Root<Member> root           = cq.from(Member.class);
         //
-        
-        cq                               = cq.select((cb.count(root)));
-        List<Predicate> searchConditions = new ArrayList<>();
-        String searchType = memberListRequest.getSearchType();
-        String searchWord = memberListRequest.getSearchWord();
+        String searchType           = memberListRequest.getSearchType();
+        String searchWord           = memberListRequest.getSearchWord();
 
         if(memberListRequest.getStartDate() != null && memberListRequest.getEndDate() != null){
             searchConditions.add(cb.between(root.get("joinDate"), memberListRequest.getStartDate(), memberListRequest.getEndDate()));
@@ -56,6 +54,7 @@ public class MemberRepository {
         }
 
         cq = cq.where(cb.and(searchConditions.toArray(new Predicate[0])));
+        cq = cq.select((cb.count(root)));
 
         return  em.createQuery(cq).getSingleResult();
     }
@@ -64,7 +63,6 @@ public class MemberRepository {
         CriteriaBuilder cb          = em.getCriteriaBuilder();
         CriteriaQuery<Member> cq    = cb.createQuery(Member.class);
         Root<Member> root           = cq.from(Member.class);
-        cq                          = cq.select(root);
 
         List<Predicate> searchConditions = new ArrayList<>();
         String searchType = memberListRequest.getSearchType();
@@ -79,26 +77,17 @@ public class MemberRepository {
         }
 
         if (searchWord != null && !searchWord.trim().isEmpty()) {
-
-            // 3-1. 아이디 검색 (LIKE 검색)
             if ("memberId".equals(searchType)) {
-                searchConditions.add(cb.like(root.get("memberId"), "%" + searchWord + "%"));
-                //searchConditions.add(cb.equal(root.get("memberId"), searchWord));
-                // 3-2. 핸드폰번호 검색 (EQUAL 검색)
+                searchConditions.add(cb.equal(root.get("memberId"), searchWord));
             } else if ("phoneNumber".equals(searchType)) {
-                // 핸드폰번호는 보통 정확히 일치(Equal)를 사용합니다.
                 searchConditions.add(cb.equal(root.get("phoneNumber"), searchWord));
-
-                // 3-3. '회원명' 등 기본 검색 조건이 있을 경우 추가 (옵션)
-                // } else if ("memberName".equals(searchType)) {
-                //    searchConditions.add(cb.like(root.get("memberName"), "%" + searchWord + "%"));
             }
         }
 
         cq = cq.where(cb.and(searchConditions.toArray(new Predicate[0])));
 
         TypedQuery<Member> typedQuery = em.createQuery(cq);
-        typedQuery.setFirstResult(memberListRequest.getPage());
+        typedQuery.setFirstResult(memberListRequest.getPage() - 1);
         typedQuery.setMaxResults(memberListRequest.getPageLimit());
 
         return typedQuery.getResultList();
