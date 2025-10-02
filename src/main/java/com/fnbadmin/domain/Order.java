@@ -30,18 +30,15 @@ public class Order {
     @Column(name = "order_id", unique = true, nullable = false)
     private String orderId;
 
-    // Foreign Key to the Member entity (consider using @ManyToOne for proper JPA relationship)
     @Column(name = "member_id", nullable = false)
     private int memberId;
 
-    // Using LocalDateTime for precise date and time tracking
     @Column(name = "order_date", updatable = false)
     private LocalDateTime orderDate;
 
     @Column(name = "order_status")
     private String orderStatus;
 
-    // Set precision/scale for BigDecimal to handle currency accurately
     @Column(name = "total_amount", precision = 19, scale = 2)
     private BigDecimal totalAmount;
 

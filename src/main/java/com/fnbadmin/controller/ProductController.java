@@ -45,9 +45,4 @@ public class ProductController {
     public ResponseEntity<ProductInfoResponse> getProductInfo(@PathVariable int productId) {
         return ResponseEntity.ok(this.productService.getInfo(productId));
     }
-
-    @GetMapping("/product/option/list")
-    public ResponseEntity<List<ProductOptionResponse>> getProductOptions() {
-        return ResponseEntity.ok(this.productService.getAllProductOptions());
-    }
 }

@@ -6,6 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CouponRequest {
+    private int page;
+    private int pageLimit;
     private String couponId;
     private String couponName;
     private String applyStartDate;
@@ -14,6 +16,4 @@ public class CouponRequest {
     private String registerEndDate;
     private String registerBy;
     private String status;
-    private int page;
-    private int pageLimit;
 }

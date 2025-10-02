@@ -22,14 +22,12 @@ public class OrderAdditionalOption {
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
 
-    // Foreign Key or reference to the Order entity
     @Column(name = "order_id", nullable = false)
     private String orderId;
 
     @Column(name = "order_product_id", nullable = false)
-    private String orderProductId;
+    private int orderProductId;
 
-    // Reference to the AdditionalOption entity
     @Column(name = "additional_option_id", nullable = false)
     private String additionalOptionId;
 

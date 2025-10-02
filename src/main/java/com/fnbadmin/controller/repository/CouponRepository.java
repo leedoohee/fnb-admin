@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class CouponRepository {
 
-    private EntityManager em;
+    private final EntityManager em;
 
     public CouponRepository(EntityManager entityManager) {
         this.em = entityManager;

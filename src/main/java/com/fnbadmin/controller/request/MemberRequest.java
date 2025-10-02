@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class MemberListRequest {
+public class MemberRequest {
     private int page;
     private int pageLimit;
     private LocalDate startDate;

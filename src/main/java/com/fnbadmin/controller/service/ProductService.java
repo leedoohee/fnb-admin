@@ -6,6 +6,7 @@ import com.fnbadmin.controller.request.CreateProductOptionRequest;
 import com.fnbadmin.controller.request.CreateProductRequest;
 import com.fnbadmin.controller.request.ProductRequest;
 import com.fnbadmin.controller.response.*;
+import com.fnbadmin.domain.Order;
 import com.fnbadmin.domain.Product;
 import com.fnbadmin.domain.ProductOption;
 import org.springframework.stereotype.Service;
@@ -50,10 +51,9 @@ public class ProductService {
 
     public PageResponse<ProductListResponse> getList(ProductRequest productRequest) {
         List<ProductListResponse> responses = new ArrayList<>();
-
-        List<Product> products = this.productRepository.findProducts(productRequest.getStartDate(),
-                productRequest.getEndDate(), productRequest.getStatus(),
-                productRequest.getPage(), productRequest.getPageLimit());
+        long totalCount         = this.productRepository.getTotalProductCount(productRequest);
+        int lastPageNumber      = (int) (Math.ceil((double) totalCount / productRequest.getPageLimit()));
+        List<Product> products  = this.productRepository.findProducts(productRequest);
 
         for (Product product : products) {
             responses.add(ProductListResponse.builder()
@@ -70,15 +70,15 @@ public class ProductService {
         }
 
         return PageResponse.<ProductListResponse>builder()
-                .last_page(1)
+                .last_page(lastPageNumber)
                 .data(responses)
                 .build();
     }
 
     public ProductInfoResponse getInfo(int productId) {
-        Product product                                             = this.productRepository.findProductById(productId);
-        List<ProductOption> productOptions                          = this.productRepository.findProductOptions(productId);
-        List<ProductOptionResponse> productOptionResponses          = new ArrayList<>();
+        Product product                                     = this.productRepository.findProductById(productId);
+        List<ProductOption> productOptions                  = this.productRepository.findProductOptions(productId);
+        List<ProductOptionResponse> productOptionResponses  = new ArrayList<>();
 
         for (ProductOption productOption : productOptions) {
             productOptionResponses.add(ProductOptionResponse.builder()
@@ -113,23 +113,6 @@ public class ProductService {
                 .updatedBy(product.getUpdatedBy())
                 .productOptions(productOptionResponses)
                 .build();
-    }
-
-    public List<ProductOptionResponse> getAllProductOptions() {
-        List<ProductOption> productOptions = this.productRepository.findAllProductOptions();
-        List<ProductOptionResponse> responses = new ArrayList<>();
-
-        for (ProductOption productOption : productOptions) {
-            responses.add(ProductOptionResponse.builder()
-                    .optionId(productOption.getOptionId())
-                    .name(productOption.getName())
-                    .price(productOption.getPrice())
-                    .createdAt(String.valueOf(productOption.getCreatedAt()))
-                    .updatedAt(String.valueOf(productOption.getUpdatedAt()))
-                    .build());
-        }
-
-        return responses;
     }
 
     private int insertProduct(CreateProductRequest createProductRequest) {

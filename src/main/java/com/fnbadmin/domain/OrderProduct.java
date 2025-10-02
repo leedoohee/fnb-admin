@@ -24,7 +24,7 @@ public class OrderProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
-    private int id;
+    private int orderProductId;
 
     @Column(name = "option_id", nullable = false)
     private String optionId;

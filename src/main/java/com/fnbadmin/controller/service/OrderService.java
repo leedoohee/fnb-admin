@@ -31,16 +31,14 @@ public class OrderService {
 
     public PageResponse<OrderListResponse> getList(OrderRequest orderRequest) {
         List<OrderListResponse> responses = new ArrayList<>();
-        int totalCount= 3;
 
-        List<Order> orders = orderRepository.findOrders(orderRequest.getStartDate(),
-                orderRequest.getEndDate(), orderRequest.getOrderStatus(),
-                orderRequest.getPage(), orderRequest.getPageLimit());
+        long totalCount     = this.orderRepository.getTotalOrderCount(orderRequest);
+        List<Order> orders  = this.orderRepository.findOrders(orderRequest);
 
         int lastPageNumber  = (int) (Math.ceil((double) totalCount / orderRequest.getPageLimit()));
 
-        List<String> orderIdList             = orders.stream().map(Order::getOrderId).toList();
-        List<Payment> payments               = this.paymentRepository.findPayments(orderIdList);
+        List<String> orderIdList = orders.stream().map(Order::getOrderId).toList();
+        List<Payment> payments   = this.paymentRepository.findPayments(orderIdList);
 
         for (Order order : orders) {
             payments.stream().filter(payment -> payment.getOrderId().equals(order.getOrderId()))
@@ -70,14 +68,16 @@ public class OrderService {
         Order order                      = this.orderRepository.findOrder(orderId);
         List<OrderProduct> orderProducts = this.orderRepository.findOrderProducts(orderId);
         Payment payment                  = this.paymentRepository.findPayment(orderId);
-        List<String> orderProductIdList  = orderProducts.stream().map(OrderProduct::getId).map(String::valueOf).toList();
-        String orderProductIds           = String.join(",", orderProductIdList);
-        List<OrderAdditionalOption> orderAdditionalOptions = this.orderRepository.findOrderAdditionalOptions(orderProductIds);
+        List<String> orderProductIdList  = orderProducts.stream().map(OrderProduct::getOrderProductId).map(String::valueOf).toList();
+        List<OrderAdditionalOption> orderAdditionalOptions = this.orderRepository.findOrderAdditionalOptions(orderProductIdList);
 
         for (OrderProduct orderProduct : orderProducts) {
-            orderProduct.setOrderAdditionalOptions(orderAdditionalOptions.stream()
-                    .filter(option -> option.getOrderProductId().equals(orderProduct.getId()))
-                    .toList());
+            List<OrderAdditionalOption> additionalOptions = orderAdditionalOptions.stream()
+                    .filter(orderAdditionalOption ->
+                            orderAdditionalOption.getOrderProductId() == orderProduct.getOrderProductId())
+                    .toList();
+
+            orderProduct.setOrderAdditionalOptions(additionalOptions);
         }
 
         return OrderInfoResponse.builder()

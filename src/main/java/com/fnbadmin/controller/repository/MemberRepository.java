@@ -1,11 +1,11 @@
 package com.fnbadmin.controller.repository;
 
-import com.fnbadmin.controller.request.MemberListRequest;
+import com.fnbadmin.controller.request.MemberRequest;
 import com.fnbadmin.domain.Member;
 import com.fnbadmin.domain.MemberCoupon;
 import com.fnbadmin.domain.MemberGrade;
+import com.fnbadmin.domain.Order;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Component
 public class MemberRepository {
@@ -26,36 +25,41 @@ public class MemberRepository {
         this.em = entityManager;
     }
 
-    public Long getTotalMemberCount(MemberListRequest memberListRequest) {
+    public Long getTotalMemberCount(MemberRequest memberRequest) {
         //TODO 제네릭으로 공통으로 뻬기
         CriteriaBuilder cb          = em.getCriteriaBuilder();
         CriteriaQuery<Long> cq      = cb.createQuery(Long.class);
         Root<Member> root           = cq.from(Member.class);
 
-        cq = cq.where(cb.and(this.buildConditions(memberListRequest, cb, root).toArray(new Predicate[0])));
+        cq = cq.where(cb.and(this.buildConditions(memberRequest, cb, root).toArray(new Predicate[0])));
         cq = cq.select((cb.count(root)));
 
         return  em.createQuery(cq).getSingleResult();
     }
 
-    public List<Member> findMembers(MemberListRequest memberListRequest) {
+    public List<Member> findMembers(MemberRequest memberRequest) {
         CriteriaBuilder cb          = em.getCriteriaBuilder();
         CriteriaQuery<Member> cq    = cb.createQuery(Member.class);
         Root<Member> root           = cq.from(Member.class);
 
-        cq = cq.where(cb.and(this.buildConditions(memberListRequest, cb, root).toArray(new Predicate[0])));
+        cq = cq.where(cb.and(this.buildConditions(memberRequest, cb, root).toArray(new Predicate[0])));
 
         TypedQuery<Member> typedQuery = em.createQuery(cq);
-        typedQuery.setFirstResult(memberListRequest.getPage() - 1);
-        typedQuery.setMaxResults(memberListRequest.getPageLimit());
+        typedQuery.setFirstResult(memberRequest.getPage() - 1);
+        typedQuery.setMaxResults(memberRequest.getPageLimit());
 
         return typedQuery.getResultList();
     }
 
     public Member findMemberById(String memberId) {
-        return this.em.createQuery("select m from Member m where m.memberId = :memberId", Member.class)
-                .setParameter("memberId", memberId)
-                .getSingleResult();
+        CriteriaBuilder cb          = em.getCriteriaBuilder();
+        CriteriaQuery<Member> cq    = cb.createQuery(Member.class);
+        Root<Member> root           = cq.from(Member.class);
+
+        cq = cq.where(cb.and(cb.equal(root.get("memberId"), memberId)));
+        TypedQuery<Member> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getSingleResult();
     }
 
     public List<MemberCoupon> findMemberCoupons(int memberId) {
@@ -69,17 +73,17 @@ public class MemberRepository {
                 .getResultList();
     }
 
-    private List<Predicate> buildConditions(MemberListRequest memberListRequest, CriteriaBuilder cb, Root<Member> root) {
+    private List<Predicate> buildConditions(MemberRequest memberRequest, CriteriaBuilder cb, Root<Member> root) {
         List<Predicate> searchConditions    = new ArrayList<>();
-        String searchType                   = memberListRequest.getSearchType();
-        String searchWord                   = memberListRequest.getSearchWord();
+        String searchType                   = memberRequest.getSearchType();
+        String searchWord                   = memberRequest.getSearchWord();
 
-        if(memberListRequest.getStartDate() != null && memberListRequest.getEndDate() != null){
-            searchConditions.add(cb.between(root.get("joinDate"), memberListRequest.getStartDate(), memberListRequest.getEndDate()));
+        if(memberRequest.getStartDate() != null && memberRequest.getEndDate() != null){
+            searchConditions.add(cb.between(root.get("joinDate"), memberRequest.getStartDate(), memberRequest.getEndDate()));
         }
 
-        if(memberListRequest.getMemberGrade() != null && !memberListRequest.getMemberGrade().isEmpty()){
-            searchConditions.add(cb.equal(root.get("grade"), memberListRequest.getMemberGrade()));
+        if(memberRequest.getMemberGrade() != null && !memberRequest.getMemberGrade().isEmpty()){
+            searchConditions.add(cb.equal(root.get("grade"), memberRequest.getMemberGrade()));
         }
 
         if (searchWord != null && !searchWord.trim().isEmpty()) {

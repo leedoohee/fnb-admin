@@ -65,7 +65,7 @@ public class Product {
     private int isUse;
 
     @Column(name = "quantity")
-    private int quantity; // Note: Original had 'Quantity', changed to 'quantity' for convention
+    private int quantity;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -79,7 +79,6 @@ public class Product {
     @Column(name = "updated_by")
     private String updatedBy;
 
-    // These relationships are loaded separately or mapped via @OneToMany
     @Transient
     private List<ProductOption> productOptions;
 

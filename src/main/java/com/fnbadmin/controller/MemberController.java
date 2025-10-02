@@ -1,6 +1,6 @@
 package com.fnbadmin.controller;
 
-import com.fnbadmin.controller.request.MemberListRequest;
+import com.fnbadmin.controller.request.MemberRequest;
 import com.fnbadmin.controller.response.MemberGradeListResponse;
 import com.fnbadmin.controller.response.MemberInfoResponse;
 import com.fnbadmin.controller.response.MemberListResponse;
@@ -33,8 +33,8 @@ public class MemberController {
     }
 
     @GetMapping("/member/list")
-    public ResponseEntity<PageResponse<MemberListResponse>> getMembers(MemberListRequest memberListRequest) {
-        return ResponseEntity.ok(this.memberService.getList(memberListRequest));
+    public ResponseEntity<PageResponse<MemberListResponse>> getMembers(MemberRequest memberRequest) {
+        return ResponseEntity.ok(this.memberService.getList(memberRequest));
     }
 
     @GetMapping("/member/{memberId}")

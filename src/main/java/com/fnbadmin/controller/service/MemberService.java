@@ -1,7 +1,7 @@
 package com.fnbadmin.controller.service;
 
 import com.fnbadmin.controller.repository.MemberRepository;
-import com.fnbadmin.controller.request.MemberListRequest;
+import com.fnbadmin.controller.request.MemberRequest;
 import com.fnbadmin.controller.response.MemberGradeListResponse;
 import com.fnbadmin.controller.response.MemberInfoResponse;
 import com.fnbadmin.controller.response.MemberListResponse;
@@ -11,7 +11,6 @@ import com.fnbadmin.domain.MemberGrade;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -23,11 +22,11 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public PageResponse<MemberListResponse> getList(MemberListRequest memberListRequest) {
+    public PageResponse<MemberListResponse> getList(MemberRequest memberRequest) {
         List<MemberListResponse> responses = new ArrayList<>();
-        Long totalCount         = this.memberRepository.getTotalMemberCount(memberListRequest);
-        int lastPageNumber      = (int) (Math.ceil((double) totalCount / memberListRequest.getPageLimit()));
-        List<Member> members    = this.memberRepository.findMembers(memberListRequest);
+        Long totalCount         = this.memberRepository.getTotalMemberCount(memberRequest);
+        int lastPageNumber      = (int) (Math.ceil((double) totalCount / memberRequest.getPageLimit()));
+        List<Member> members    = this.memberRepository.findMembers(memberRequest);
 
         for (Member member : members) {
             responses.add(MemberListResponse.builder()
