@@ -24,10 +24,10 @@ public class MemberService {
     }
 
     public PageResponse<MemberListResponse> getList(MemberListRequest memberListRequest) {
-        Long totalCount     = this.memberRepository.getTotalMemberCount();
-        int lastPageNumber  = (int) (Math.ceil((double) totalCount / memberListRequest.getPageLimit()));
         List<MemberListResponse> responses = new ArrayList<>();
-        List<Member> members = this.memberRepository.findMembers(memberListRequest.getPage(), memberListRequest.getPageLimit());
+        Long totalCount     = this.memberRepository.getTotalMemberCount(memberListRequest);
+        int lastPageNumber  = (int) (Math.ceil((double) totalCount / memberListRequest.getPageLimit()));
+        List<Member> members = this.memberRepository.findMembers(memberListRequest);
 
         for (Member member : members) {
             responses.add(MemberListResponse.builder()
