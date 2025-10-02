@@ -32,59 +32,20 @@ public class MemberRepository {
         CriteriaBuilder cb          = em.getCriteriaBuilder();
         CriteriaQuery<Long> cq      = cb.createQuery(Long.class);
         Root<Member> root           = cq.from(Member.class);
-        //
-        String searchType           = memberListRequest.getSearchType();
-        String searchWord           = memberListRequest.getSearchWord();
 
-        if(memberListRequest.getStartDate() != null && memberListRequest.getEndDate() != null){
-            searchConditions.add(cb.between(root.get("joinDate"), memberListRequest.getStartDate(), memberListRequest.getEndDate()));
-        }
-
-        if(memberListRequest.getMemberGrade() != null && !memberListRequest.getMemberGrade().isEmpty()){
-            searchConditions.add(cb.equal(root.get("grade"), memberListRequest.getMemberGrade()));
-        }
-
-        if (searchWord != null && !searchWord.trim().isEmpty()) {
-            if ("memberId".equals(searchType)) {
-                searchConditions.add(cb.equal(root.get("memberId"), searchWord));
-                //searchConditions.add(cb.like(root.get("memberId"), "%" + searchWord + "%"));
-            } else if ("phoneNumber".equals(searchType)) {
-                searchConditions.add(cb.equal(root.get("phoneNumber"), searchWord));
-            }
-        }
-
-        cq = cq.where(cb.and(searchConditions.toArray(new Predicate[0])));
+        cq = cq.where(cb.and(this.buildConditions(memberListRequest, cb, root).toArray(new Predicate[0])));
         cq = cq.select((cb.count(root)));
 
         return  em.createQuery(cq).getSingleResult();
     }
 
     public List<Member> findMembers(MemberListRequest memberListRequest) {
+        List<Predicate> searchConditions = new ArrayList<>();
         CriteriaBuilder cb          = em.getCriteriaBuilder();
         CriteriaQuery<Member> cq    = cb.createQuery(Member.class);
         Root<Member> root           = cq.from(Member.class);
 
-        List<Predicate> searchConditions = new ArrayList<>();
-        String searchType = memberListRequest.getSearchType();
-        String searchWord = memberListRequest.getSearchWord();
-
-        if(memberListRequest.getStartDate() != null && memberListRequest.getEndDate() != null){
-            searchConditions.add(cb.between(root.get("joinDate"), memberListRequest.getStartDate(), memberListRequest.getEndDate()));
-        }
-
-        if(memberListRequest.getMemberGrade() != null && !memberListRequest.getMemberGrade().isEmpty()){
-            searchConditions.add(cb.equal(root.get("grade"), memberListRequest.getMemberGrade()));
-        }
-
-        if (searchWord != null && !searchWord.trim().isEmpty()) {
-            if ("memberId".equals(searchType)) {
-                searchConditions.add(cb.equal(root.get("memberId"), searchWord));
-            } else if ("phoneNumber".equals(searchType)) {
-                searchConditions.add(cb.equal(root.get("phoneNumber"), searchWord));
-            }
-        }
-
-        cq = cq.where(cb.and(searchConditions.toArray(new Predicate[0])));
+        cq = cq.where(cb.and(this.buildConditions(memberListRequest, cb, root).toArray(new Predicate[0])));
 
         TypedQuery<Member> typedQuery = em.createQuery(cq);
         typedQuery.setFirstResult(memberListRequest.getPage() - 1);
@@ -110,7 +71,27 @@ public class MemberRepository {
                 .getResultList();
     }
 
-    private int getPageCount(int page, int pageLimit) {
-        return (page - 1) * pageLimit;
+    private List<Predicate> buildConditions(MemberListRequest memberListRequest, CriteriaBuilder cb, Root<Member> root) {
+        List<Predicate> searchConditions    = new ArrayList<>();
+        String searchType                   = memberListRequest.getSearchType();
+        String searchWord                   = memberListRequest.getSearchWord();
+
+        if(memberListRequest.getStartDate() != null && memberListRequest.getEndDate() != null){
+            searchConditions.add(cb.between(root.get("joinDate"), memberListRequest.getStartDate(), memberListRequest.getEndDate()));
+        }
+
+        if(memberListRequest.getMemberGrade() != null && !memberListRequest.getMemberGrade().isEmpty()){
+            searchConditions.add(cb.equal(root.get("grade"), memberListRequest.getMemberGrade()));
+        }
+
+        if (searchWord != null && !searchWord.trim().isEmpty()) {
+            if ("memberId".equals(searchType)) {
+                searchConditions.add(cb.like(root.get("memberId"), "%" + searchWord + "%"));
+            } else if ("phoneNumber".equals(searchType)) {
+                searchConditions.add(cb.equal(root.get("phoneNumber"), searchWord));
+            }
+        }
+
+        return  searchConditions;
     }
 }
