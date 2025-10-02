@@ -27,7 +27,6 @@ public class MemberRepository {
     }
 
     public Long getTotalMemberCount(MemberListRequest memberListRequest) {
-        List<Predicate> searchConditions = new ArrayList<>();
         //TODO 제네릭으로 공통으로 뻬기
         CriteriaBuilder cb          = em.getCriteriaBuilder();
         CriteriaQuery<Long> cq      = cb.createQuery(Long.class);
@@ -40,7 +39,6 @@ public class MemberRepository {
     }
 
     public List<Member> findMembers(MemberListRequest memberListRequest) {
-        List<Predicate> searchConditions = new ArrayList<>();
         CriteriaBuilder cb          = em.getCriteriaBuilder();
         CriteriaQuery<Member> cq    = cb.createQuery(Member.class);
         Root<Member> root           = cq.from(Member.class);
