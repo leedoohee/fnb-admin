@@ -95,7 +95,15 @@ public class OrderRepository {
         }
 
         if(orderRequest.getOrderStatus() != null && !orderRequest.getOrderStatus().isEmpty()){
-            searchConditions.add(cb.equal(root.get("orderStatus"), orderRequest.getOrderStatus()));
+            searchConditions.add(cb.and(root.get("orderStatus").in(orderRequest.getOrderStatus())));
+        }
+
+        if(orderRequest.getOrderType() != null && !orderRequest.getOrderType().isEmpty()){
+            searchConditions.add(cb.and(root.get("orderType").in(orderRequest.getOrderType())));
+        }
+
+        if(orderRequest.getMemberSeq() > 0){
+            searchConditions.add(cb.equal(root.get("memberSeq"), orderRequest.getMemberSeq()));
         }
 
         if (searchWord != null && !searchWord.trim().isEmpty()) {

@@ -90,6 +90,9 @@ public class Coupon {
     @Transient
     private List<CouponProduct> couponProducts;
 
+    @Transient
+    private List<MemberCoupon> memberCoupons;
+
     public Coupon() {
         // Default constructor
     }

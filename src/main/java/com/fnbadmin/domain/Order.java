@@ -30,8 +30,11 @@ public class Order {
     @Column(name = "order_id", unique = true, nullable = false)
     private String orderId;
 
+    @Column(name = "member_seq", nullable = false)
+    private int memberSeq;
+
     @Column(name = "member_id", nullable = false)
-    private int memberId;
+    private String memberId;
 
     @Column(name = "order_date", updatable = false)
     private LocalDateTime orderDate;

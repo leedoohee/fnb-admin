@@ -21,7 +21,7 @@
                     <div class="card-body">
                         <div class="row mb-2 justify-content-end">
                             <div class="col-auto">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                                <button type="button" class="btn btn-primary" id="searchMemberGrades">
                                     검색
                                 </button>
                             </div>
@@ -31,16 +31,20 @@
                             document.addEventListener("DOMContentLoaded", function() {
                                 const memberGradeTable = new Tabulator("#memberGradeTable", {
                                     height:"500px",
-                                    layout:"fitColumns",
+                                    ajaxURL: "http://localhost:8080/member-grade/list",
                                     columns:[
-                                        {title:"Name", field:"name", width:200},
-                                        {title:"Progress", field:"progress", hozAlign:"right", sorter:"number"},
-                                        {title:"Gender", field:"gender", widthGrow:2},
-                                        {title:"Rating", field:"rating", hozAlign:"center"},
-                                        {title:"Favourite Color", field:"col", widthGrow:3},
-                                        {title:"Date Of Birth", field:"dob", hozAlign:"center", sorter:"date", widthGrow:2},
-                                        {title:"Driver", field:"car", hozAlign:"center"},
+                                        {title:"등급", field:"grade", width:200},
+                                        {title:"설명", field:"description", width:200},
+                                        {title:"할인타입", field:"discountType"},
+                                        {title:"할인율", field:"discountRate"},
+                                        {title:"적용최소금액", field:"minOrderAmount"},
+                                        {title:"적용최대금액", field:"maxOrderAmount"}
                                     ],
+                                });
+
+                                document.querySelector("#searchMemberGrades").addEventListener('click', function (e) {
+                                    e.preventDefault();
+                                    memberGradeTable.setData("http://localhost:8080/member-grade/list", "GET");
                                 });
                             });
                         </script>

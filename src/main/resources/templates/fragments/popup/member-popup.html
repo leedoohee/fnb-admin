@@ -75,11 +75,11 @@
                                     <td class="col-lg-10">
                                         <div class="row">
                                             <div class="col-lg-2">
-                                                <input id="startDate" class="form-control" type="date" />
+                                                <input id="orderStartDate" class="form-control" type="date" />
                                             </div>
                                             ~
                                             <div class="col-lg-2">
-                                                <input id="endDate" class="form-control" type="date" />
+                                                <input id="orderEndDate" class="form-control" type="date" />
                                             </div>
                                         </div>
                                     </td>
@@ -89,14 +89,14 @@
                                     <td class="col-lg-10">
                                         <div class="row">
                                             <div class="col-lg-2">
-                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                <label class="form-check-label" for="">
+                                                <input type="checkbox" class="form-check-input" id="pickup" name="orderType" value="1" checked />
+                                                <label class="form-check-label" for="pickup">
                                                     픽업
                                                 </label>
                                             </div>
                                             <div class="col-lg-2">
-                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                <label class="form-check-label" for="">
+                                                <input type="checkbox" class="form-check-input" id="delivery" name="orderType" value="2" checked />
+                                                <label class="form-check-label" for="delivery">
                                                     배달
                                                 </label>
                                             </div>
@@ -108,32 +108,32 @@
                                     <td class="col-lg-10">
                                         <div class="row">
                                             <div class="col-lg-2">
-                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                <label class="form-check-label" for="">
+                                                <input type="checkbox" class="form-check-input" id="temp" name="orderStatus" />
+                                                <label class="form-check-label" for="temp">
                                                     임시저장
                                                 </label>
                                             </div>
                                             <div class="col-lg-2">
-                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                <label class="form-check-label" for="">
+                                                <input type="checkbox" class="form-check-input" id="complete" name="orderStatus" />
+                                                <label class="form-check-label" for="complete">
                                                     주문완료
                                                 </label>
                                             </div>
                                             <div class="col-lg-2">
-                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                <label class="form-check-label" for="">
+                                                <input type="checkbox" class="form-check-input" id="pickupComplete" name="orderStatus" />
+                                                <label class="form-check-label" for="pickupComplete">
                                                     픽업완료
                                                 </label>
                                             </div>
                                             <div class="col-lg-2">
-                                                <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                <label class="form-check-label" for="">
+                                                <input type="checkbox" class="form-check-input" id="deliveryComplete" name="orderStatus" />
+                                                <label class="form-check-label" for="deliveryComplete">
                                                     배달완료
                                                 </label>
                                             </div>
                                             <div class="col-lg-2">
-                                                <input type="checkbox" class="form-check-input" id="" />
-                                                <label class="form-check-label" for="">
+                                                <input type="checkbox" class="form-check-input" id="finish" name="orderStatus" />
+                                                <label class="form-check-label" for="finish">
                                                     주문확정
                                                 </label>
                                             </div>
@@ -145,13 +145,13 @@
                                     <td>
                                         <div class="row">
                                             <div class="col-lg-2">
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected>주문번호</option>
-                                                    <option value="1">주문자</option>
+                                                <select class="form-select" id="searchSelect">
+                                                    <option selected value="orderId">주문번호</option>
+                                                    <option value="memberId">주문자</option>
                                                 </select>
                                             </div>
                                             <div class="col-lg-4">
-                                                <input type="text" class="form-control" id="basicInput" />
+                                                <input type="text" class="form-control" id="searchWord" />
                                             </div>
                                         </div>
                                     </td>
@@ -163,18 +163,55 @@
                                 document.addEventListener("DOMContentLoaded", function() {
                                     const memberOrderTable = new Tabulator("#memberOrderTable", {
                                         height:"350px",
-                                        layout:"fitColumns",
+                                        pagination: true,
+                                        paginationMode: "remote",
+                                        paginationCounter:"pages",
+                                        ajaxURL: "http://localhost:8080/order/list",
+                                        ajaxParams: Object.assign({ page: "1", pageLimit: "50" }, buildQueryObject()),
+                                        ajaxResponse:function(url, params, response){
+                                            return response;
+                                        },
                                         columns:[
-                                            {title:"Name", field:"name", width:200},
-                                            {title:"Progress", field:"progress", hozAlign:"right", sorter:"number"},
-                                            {title:"Gender", field:"gender", widthGrow:2},
-                                            {title:"Rating", field:"rating", hozAlign:"center"},
-                                            {title:"Favourite Color", field:"col", widthGrow:3},
-                                            {title:"Date Of Birth", field:"dob", hozAlign:"center", sorter:"date", widthGrow:2},
-                                            {title:"Driver", field:"car", hozAlign:"center"},
+                                            {title:"주문번호", field:"orderId", width:150},
+                                            {title:"주문자", field:"memberName", width:100},
+                                            {title:"주문상태", field:"orderStatus", width:100},
+                                            {title:"주문일시", field:"orderDate", width:180},
+                                            {title:"결제유형", field:"paymentType", width:100},
+                                            {title:"결제상태", field:"paymentStatus", width:100},
+                                            {title:"총결제금액", field:"totalAmount", hozAlign:"right", sorter:"number", width:120},
+                                            {title:"실결제금액", field:"paymentAmount", hozAlign:"right", sorter:"number", width:120},
+                                            {title:"결제일시", field:"paymentDate", width:180},
                                         ],
                                     });
                                 });
+
+                                function buildQueryObject() {
+                                    const query = {};
+
+                                    const startDate = document.getElementById('orderStartDate').value;
+                                    const endDate = document.getElementById('orderEndDate').value;
+
+                                    if (startDate) query.orderStartDate = startDate;
+                                    if (endDate) query.orderEndDate = endDate;
+
+                                    const orderTypes = Array.from(document.querySelectorAll('input[name="orderType"]:checked'))
+                                        .map(el => el.value);
+                                    if (orderTypes.length > 0) query.orderType = orderTypes;
+
+                                    const orderStatuses = Array.from(document.querySelectorAll('input[name="orderStatus"]:checked'))
+                                        .map(el => el.value); // 또는 el.value
+                                    if (orderStatuses.length > 0) query.orderStatus = orderStatuses;
+
+                                    const searchField = document.getElementById('searchSelect').value;
+                                    const searchWord = document.getElementById('searchWord').value;
+
+                                    if (searchWord) {
+                                        query.searchField = searchField;
+                                        query.searchWord = searchWord;
+                                    }
+
+                                    return query;
+                                }
                             </script>
                         </div>
                     </div>

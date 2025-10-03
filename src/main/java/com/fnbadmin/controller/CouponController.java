@@ -4,6 +4,8 @@ import com.fnbadmin.controller.request.CouponRequest;
 import com.fnbadmin.controller.request.CreateCouponRequest;
 import com.fnbadmin.controller.response.CouponInfoResponse;
 import com.fnbadmin.controller.response.CouponListResponse;
+import com.fnbadmin.controller.response.OrderListResponse;
+import com.fnbadmin.controller.response.PageResponse;
 import com.fnbadmin.controller.service.CouponService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,7 +34,7 @@ public class CouponController {
     }
 
     @GetMapping("/coupon/list")
-    public ResponseEntity<List<CouponListResponse>> getCoupons(CouponRequest couponRequest) {
+    public ResponseEntity<PageResponse<CouponListResponse>> getCoupons(CouponRequest couponRequest) {
         return ResponseEntity.ok(this.couponService.getList(couponRequest));
     }
 

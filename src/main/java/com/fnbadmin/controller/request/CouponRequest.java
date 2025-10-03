@@ -3,6 +3,8 @@ package com.fnbadmin.controller.request;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class CouponRequest {
@@ -15,5 +17,8 @@ public class CouponRequest {
     private String registerStartDate;
     private String registerEndDate;
     private String registerBy;
-    private String status;
+    private List<String> status;
+    private List<String> couponType;
+    private String searchType;
+    private String searchWord;
 }

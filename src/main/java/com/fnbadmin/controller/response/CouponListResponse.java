@@ -19,4 +19,7 @@ public class CouponListResponse {
     private String registerDate;
     private String registerBy;
     private String status;
+    private int couponProductCount;
+    private int usedMemberCount;
+    private int nonUsedMemberCount;
 }

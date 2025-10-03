@@ -1,9 +1,14 @@
 package com.fnbadmin.controller.repository;
 
 import com.fnbadmin.domain.Order;
+import com.fnbadmin.domain.OrderAdditionalOption;
 import com.fnbadmin.domain.Payment;
 import com.fnbadmin.domain.PaymentElement;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,20 +23,37 @@ public class PaymentRepository {
     }
 
     public List<Payment> findPayments(List<String> orderIds) {
-        return this.em.createQuery("select p from Payment p where p.orderId in (:orderIds)", Payment.class)
-                .setParameter("orderIds", orderIds)
-                .getResultList();
+        CriteriaBuilder cb            = em.getCriteriaBuilder();
+        CriteriaQuery<Payment> cq     = cb.createQuery(Payment.class);
+        Root<Payment> root            = cq.from(Payment.class);
+
+        cq = cq.where(cb.and(root.get("orderId").in(orderIds)));
+
+        TypedQuery<Payment> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getResultList();
     }
 
     public List<PaymentElement> findPaymentElements(String paymentIds) {
-        return this.em.createQuery("select pe from PaymentElement pe where pe.paymentId in (:paymentIds) ", PaymentElement.class)
-                .setParameter("paymentIds", paymentIds)
-                .getResultList();
+        CriteriaBuilder cb                  = em.getCriteriaBuilder();
+        CriteriaQuery<PaymentElement> cq    = cb.createQuery(PaymentElement.class);
+        Root<PaymentElement> root           = cq.from(PaymentElement.class);
+
+        cq = cq.where(cb.and(root.get("paymentId").in(paymentIds)));
+
+        TypedQuery<PaymentElement> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getResultList();
     }
 
     public Payment findPayment(String orderId) {
-        return this.em.createQuery("select p from Payment p where p.orderId = :orderId", Payment.class)
-                .setParameter("orderId", orderId)
-                .getSingleResult();
+        CriteriaBuilder cb          = em.getCriteriaBuilder();
+        CriteriaQuery<Payment> cq   = cb.createQuery(Payment.class);
+        Root<Payment> root          = cq.from(Payment.class);
+
+        cq = cq.where(cb.and(cb.equal(root.get("orderId"), orderId)));
+        TypedQuery<Payment> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getSingleResult();
     }
 }

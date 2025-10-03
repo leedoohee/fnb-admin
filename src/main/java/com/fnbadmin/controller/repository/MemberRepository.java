@@ -26,7 +26,6 @@ public class MemberRepository {
     }
 
     public Long getTotalMemberCount(MemberRequest memberRequest) {
-        //TODO 제네릭으로 공통으로 뻬기
         CriteriaBuilder cb          = em.getCriteriaBuilder();
         CriteriaQuery<Long> cq      = cb.createQuery(Long.class);
         Root<Member> root           = cq.from(Member.class);
@@ -63,14 +62,35 @@ public class MemberRepository {
     }
 
     public List<MemberCoupon> findMemberCoupons(int memberId) {
-        return this.em.createQuery("select mc from MemberCoupon mc where mc.memberId = :memberId", MemberCoupon.class)
-                .setParameter("memberId", memberId)
-                .getResultList();
+        CriteriaBuilder cb                = em.getCriteriaBuilder();
+        CriteriaQuery<MemberCoupon> cq    = cb.createQuery(MemberCoupon.class);
+        Root<MemberCoupon> root           = cq.from(MemberCoupon.class);
+
+        cq = cq.where(cb.and(cb.equal(root.get("memberId"), memberId)));
+        TypedQuery<MemberCoupon> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getResultList();
+    }
+
+    public List<MemberCoupon> findMemberCoupons(List<Integer> couponIds) {
+        CriteriaBuilder cb                = em.getCriteriaBuilder();
+        CriteriaQuery<MemberCoupon> cq    = cb.createQuery(MemberCoupon.class);
+        Root<MemberCoupon> root           = cq.from(MemberCoupon.class);
+
+        cq = cq.where(cb.and(root.get("couponId").in(couponIds)));
+        TypedQuery<MemberCoupon> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getResultList();
     }
 
     public List<MemberGrade> findAllMemberGrades() {
-        return this.em.createQuery("select mg from MemberGrade mg", MemberGrade.class)
-                .getResultList();
+        CriteriaBuilder cb               = em.getCriteriaBuilder();
+        CriteriaQuery<MemberGrade> cq    = cb.createQuery(MemberGrade.class);
+        Root<MemberGrade> root           = cq.from(MemberGrade.class);
+
+        TypedQuery<MemberGrade> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getResultList();
     }
 
     private List<Predicate> buildConditions(MemberRequest memberRequest, CriteriaBuilder cb, Root<Member> root) {

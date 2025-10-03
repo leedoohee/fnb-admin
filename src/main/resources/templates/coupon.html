@@ -35,15 +35,15 @@
                                 <table class="table table-bordered">
                                     <tbody>
                                     <tr>
-                                        <td class="col-lg-2">등록일자</td>
+                                        <td class="col-lg-2">적용일자</td>
                                         <td class="col-lg-10">
                                             <div class="row">
                                                 <div class="col-lg-2">
-                                                    <input id="startDate" class="form-control" type="date" />
+                                                    <input id="applyStartDate" class="form-control" type="date" />
                                                 </div>
                                                 ~
                                                 <div class="col-lg-2">
-                                                    <input id="endDate" class="form-control" type="date" />
+                                                    <input id="applyEndDate" class="form-control" type="date" />
                                                 </div>
                                             </div>
                                         </td>
@@ -53,20 +53,20 @@
                                         <td class="col-lg-10">
                                             <div class="row">
                                                 <div class="col-lg-2">
-                                                    <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                    <label class="form-check-label" for="">
+                                                    <input type="checkbox" class="form-check-input" name="couponType" id="product" value="product" />
+                                                    <label class="form-check-label" for="product">
                                                         상품
                                                     </label>
                                                 </div>
                                                 <div class="col-lg-2">
-                                                    <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                    <label class="form-check-label" for="">
+                                                    <input type="checkbox" class="form-check-input" name="couponType" id="delivery" value="delivery" />
+                                                    <label class="form-check-label" for="delivery">
                                                         배달
                                                     </label>
                                                 </div>
                                                 <div class="col-lg-2">
-                                                    <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                    <label class="form-check-label" for="">
+                                                    <input type="checkbox" class="form-check-input" name="couponType" id="memberShip" value="memberShip" />
+                                                    <label class="form-check-label" for="memberShip">
                                                         멤버십
                                                     </label>
                                                 </div>
@@ -78,20 +78,20 @@
                                         <td class="col-lg-10">
                                             <div class="row">
                                                 <div class="col-lg-2">
-                                                    <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                    <label class="form-check-label" for="">
+                                                    <input type="checkbox" class="form-check-input" name="status" id="available" value="1" />
+                                                    <label class="form-check-label" for="available">
                                                         사용가능
                                                     </label>
                                                 </div>
                                                 <div class="col-lg-2">
-                                                    <input type="checkbox" class="form-check-input" id="infiniteQty" />
-                                                    <label class="form-check-label" for="">
+                                                    <input type="checkbox" class="form-check-input" name="status" id="end" value="3" />
+                                                    <label class="form-check-label" for="end">
                                                         기간만료
                                                     </label>
                                                 </div>
                                                 <div class="col-lg-2">
-                                                    <input type="checkbox" class="form-check-input" id="" />
-                                                    <label class="form-check-label" for="">
+                                                    <input type="checkbox" class="form-check-input" name="status" id="pending" value="2" />
+                                                    <label class="form-check-label" for="pending">
                                                         사용대기
                                                     </label>
                                                 </div>
@@ -103,13 +103,13 @@
                                         <td>
                                             <div class="row">
                                                 <div class="col-lg-2">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected>쿠폰명</option>
-                                                        <option value="1">쿠폰코드</option>
+                                                    <select class="form-select" id="searchSelect">
+                                                        <option selected value="couponName">쿠폰명</option>
+                                                        <option value="couponId">쿠폰코드</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-lg-4">
-                                                    <input type="text" class="form-control" id="basicInput" />
+                                                    <input type="text" class="form-control" id="searchWord" />
                                                 </div>
                                             </div>
                                         </td>
@@ -130,17 +130,55 @@
                         <script th:inline="javascript">
                             const couponListTable = new Tabulator("#couponListTable", {
                                 height:"500px",
-                                layout:"fitColumns",
+                                pagination: true,
+                                paginationMode: "remote",
+                                paginationCounter:"pages",
+                                ajaxURL: "http://localhost:8080/coupon/list",
+                                ajaxParams: Object.assign({ page: "1", pageLimit: "50" }, buildQueryObject()),
+                                ajaxResponse:function(url, params, response){
+                                    return response;
+                                },
                                 columns:[
-                                    {title:"Name", field:"name", width:200},
-                                    {title:"Progress", field:"progress", hozAlign:"right", sorter:"number"},
-                                    {title:"Gender", field:"gender", widthGrow:2},
-                                    {title:"Rating", field:"rating", hozAlign:"center"},
-                                    {title:"Favourite Color", field:"col", widthGrow:3},
-                                    {title:"Date Of Birth", field:"dob", hozAlign:"center", sorter:"date", widthGrow:2},
-                                    {title:"Driver", field:"car", hozAlign:"center"},
+                                    {title:"쿠폰명", field:"couponName", width:200},
+                                    {title:"설명", field:"description", hozAlign:"right", sorter:"number"},
+                                    {title:"적용시작일자", field:"applyStartDate", widthGrow:2},
+                                    {title:"적용마감일자", field:"applyEndDate", hozAlign:"center"},
+                                    {title:"적용상품수", field:"couponProductCount", widthGrow:3},
+                                    {title:"사용자수", field:"usedMemberCount", hozAlign:"center", sorter:"date", widthGrow:2},
+                                    {title:"미사용자수", field:"nonUsedMemberCount", hozAlign:"center"},
                                 ],
                             });
+
+                            function buildQueryObject() {
+                                const query = {};
+
+                                const applyStartDate    = document.getElementById('applyStartDate').value;
+                                const applyEndDate      = document.getElementById('applyEndDate').value;
+
+                                if (applyStartDate) query.applyStartDate = applyStartDate;
+                                if (applyEndDate) query.applyEndDate = applyEndDate;
+
+                                const types = Array.from(document.querySelectorAll('input[name="couponType"]:checked'))
+                                    .map(el => el.value);
+
+                                if (types.length > 0) query.couponType = types;
+
+                                const statuses = Array.from(document.querySelectorAll('input[name="status"]:checked'))
+                                    .map(el => el.value); // 또는 el.value
+
+                                if (statuses.length > 0) query.status = statuses;
+
+                                const searchField = document.getElementById('searchSelect').value;
+                                const searchWord = document.getElementById('searchWord').value;
+
+                                if (searchWord) {
+                                    query.searchField = searchField;
+                                    query.searchWord = searchWord;
+                                }
+
+                                return query;
+                            }
+
                         </script>
                     </div>
                 </div>

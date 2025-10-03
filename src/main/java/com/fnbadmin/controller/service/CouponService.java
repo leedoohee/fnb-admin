@@ -1,12 +1,16 @@
 package com.fnbadmin.controller.service;
 
 import com.fnbadmin.controller.repository.CouponRepository;
+import com.fnbadmin.controller.repository.MemberRepository;
 import com.fnbadmin.controller.request.CouponRequest;
 import com.fnbadmin.controller.request.CreateCouponRequest;
 import com.fnbadmin.controller.response.CouponInfoResponse;
 import com.fnbadmin.controller.response.CouponListResponse;
+import com.fnbadmin.controller.response.OrderListResponse;
+import com.fnbadmin.controller.response.PageResponse;
 import com.fnbadmin.domain.Coupon;
 import com.fnbadmin.domain.CouponProduct;
+import com.fnbadmin.domain.MemberCoupon;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,30 +21,36 @@ import java.util.List;
 public class CouponService {
 
     private final CouponRepository couponRepository;
+    private final MemberRepository memberRepository;
 
-    public CouponService(CouponRepository couponRepository) {
+    public CouponService(CouponRepository couponRepository, MemberRepository memberRepository) {
         this.couponRepository = couponRepository;
+        this.memberRepository = memberRepository;
     }
 
-    public List<CouponListResponse> getList(CouponRequest couponRequest) {
+    public PageResponse<CouponListResponse>  getList(CouponRequest couponRequest) {
         List<CouponListResponse> responses = new ArrayList<>();
+        long totalCount         = this.couponRepository.getTotalCouponCount(couponRequest);
+        List<Coupon> coupons    = this.couponRepository.findCoupons(couponRequest);
 
-        List<Coupon> coupons = this.couponRepository.findCoupons(couponRequest.getApplyStartDate(),
-                couponRequest.getApplyEndDate(), couponRequest.getStatus(),
-                couponRequest.getPage(), couponRequest.getPageLimit());
+        int lastPageNumber  = (int) (Math.ceil((double) totalCount / couponRequest.getPageLimit()));
 
-        //List<String> couponIdList = coupons.stream().map(Coupon::getId).map(String::valueOf).toList();
-        //String couponIds          = String.join(",", couponIdList);
+        List<Integer> couponIdList          = coupons.stream().map(Coupon::getId).toList();
+        List<MemberCoupon> memberCoupons    = this.memberRepository.findMemberCoupons(couponIdList);
+        List<CouponProduct> couponProducts  = this.couponRepository.findCouponProducts(couponIdList);
 
-        //List<CouponProduct> couponProducts = this.couponRepository.findCouponProducts(couponIds);
-
-        /*for (Coupon coupon : coupons) {
+        for (Coupon coupon : coupons) {
             List<CouponProduct> relatedProducts = couponProducts.stream()
                     .filter(cp -> cp.getCouponId() == coupon.getId())
-                    .collect(Collectors.toList());
+                    .toList();
+
+            List<MemberCoupon> ownedCoupons = memberCoupons.stream()
+                    .filter(mc -> mc.getCouponId() == coupon.getId())
+                    .toList();
 
             coupon.setCouponProducts(relatedProducts);
-        }*/
+            coupon.setMemberCoupons(ownedCoupons);
+        }
 
         for (Coupon coupon : coupons) {
             responses.add(CouponListResponse.builder()
@@ -49,10 +59,17 @@ public class CouponService {
                     .applyStartDate(String.valueOf(coupon.getApplyStartAt()))
                     .applyEndDate(String.valueOf(coupon.getApplyEndAt()))
                     .status(coupon.getStatus())
+                    .couponName(coupon.getName())
+                    .couponProductCount(coupon.getCouponProducts().size())
+                    .usedMemberCount(coupon.getMemberCoupons().stream().filter(cp -> cp.getIsUsed().equals("Y")).toList().size())
+                    .nonUsedMemberCount(coupon.getMemberCoupons().stream().filter(cp -> cp.getIsUsed().equals("N")).toList().size())
                     .build());
         }
 
-        return responses;
+        return PageResponse.<CouponListResponse>builder()
+                .last_page(lastPageNumber)
+                .data(responses)
+                .build();
     }
 
     public CouponInfoResponse getInfo(int couponId) {
