@@ -9,7 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -32,12 +35,17 @@ public class ProductController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Boolean> create(CreateProductRequest createProductRequest) {
-        return ResponseEntity.ok(this.productService.create(createProductRequest));
+    public ResponseEntity<Boolean> create(@RequestPart("productRequest") CreateProductRequest createProductRequest,
+                                          @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+        try {
+            return ResponseEntity.ok(this.productService.create(createProductRequest, images));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @GetMapping("/product/list")
-    public ResponseEntity<PageResponse> getProducts(ProductRequest productRequest) {
+    public ResponseEntity<PageResponse<ProductListResponse>> getProducts(ProductRequest productRequest) {
         return ResponseEntity.ok(this.productService.getList(productRequest));
     }
 

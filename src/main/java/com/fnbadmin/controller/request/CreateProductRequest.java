@@ -2,6 +2,8 @@ package com.fnbadmin.controller.request;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @Getter
@@ -9,6 +11,7 @@ import java.util.List;
 public class CreateProductRequest {
 
     private int id;
+    private int payType;
     private String name;
     private String description;
     private int price;
@@ -26,8 +29,6 @@ public class CreateProductRequest {
     private String updatedAt;
     private String createdBy;
     private String updatedBy;
-    private String[] imageFiles;
 
-    private List<CreateProductOptionRequest> productOptions;
-    private List<CreateAdditionalOptRequest> additionalOptions;
+    private List<CreateProductOptionRequest> options;
 }

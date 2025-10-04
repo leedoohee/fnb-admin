@@ -5,16 +5,21 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 public class ImageUtil {
-    public static String getImageUrl(String imagePath) {
-        String baseUrl = "http://localhost:8080/images/";
-        return baseUrl + imagePath;
-    }
+    public static String uploadImage(String imagePath, byte[] imageData) throws IOException {
+        String newFilename = UUID.randomUUID() + "." + "png";
 
-    public static void uploadImage(String imagePath, byte[] imageData) throws IOException {
+        Path destinationPath = Paths.get(imagePath, newFilename);
+        File destinationFile = destinationPath.toFile();
+
         BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(imageData));
-        ImageIO.write(bufferedImage, "png", new File(imagePath));
+        ImageIO.write(bufferedImage, "png", destinationFile);
+
+        return "/images" + newFilename;
     }
 
     //TODO S3

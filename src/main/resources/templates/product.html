@@ -169,6 +169,7 @@
                                             })
                                             .then(data => {
                                                 basicOptionTable.setData(data.productOptions);
+                                                setImages(data.attachFiles);
                                                 mapProductDataToForm(data);
 
                                                 if (targetElement) {
@@ -178,7 +179,8 @@
                                             .catch(error => {
                                                 console.error('Error fetching data:', error);
                                             });
-                                    }},
+                                    }
+                                },
                                 {title:"상품명", field:"name", width:200},
                                 {title:"가격", field:"price", width:120, hozAlign:"center"},
                                 {title:"상품타입", field:"productType", width:100 },
@@ -197,6 +199,7 @@
 
                         // 2. 체크박스 매핑: '제한없음' (isInfiniteQty)
                         const infiniteQtyCheckbox = document.getElementById('isInfiniteQty');
+
                         if (infiniteQtyCheckbox) {
                             // 1이면 true (체크), 0이면 false (체크 해제)
                             infiniteQtyCheckbox.checked = (productData.isInfiniteQty === 1);
@@ -238,6 +241,67 @@
                         }
                         // 'saleForm' 라디오 버튼 그룹에 계산된 값 적용
                         setRadioValue('saleForm', saleFormValue);
+                    }
+
+                    function setImages(files) {
+                        const container = document.getElementById('carouselContainer');
+                        container.innerHTML = '';
+
+                        if (files.length === 0) return;
+
+                        const carouselId = 'dynamicCarousel';
+                        const carousel = document.createElement('div');
+                        carousel.className = 'carousel slide';
+                        carousel.id = carouselId;
+                        carousel.setAttribute('data-bs-ride', 'carousel');
+
+                        const indicators = document.createElement('div');
+                        indicators.className = 'carousel-indicators';
+
+                        const inner = document.createElement('div');
+                        inner.className = 'carousel-inner';
+
+                        Array.from(files).forEach((file, index) => {
+                            // 인디케이터 버튼
+                            const button = document.createElement('button');
+                            button.type = 'button';
+                            button.setAttribute('data-bs-target', '#' + carouselId);
+                            button.setAttribute('data-bs-slide-to', index);
+                            if (index === 0) button.className = 'active';
+                            indicators.appendChild(button);
+
+                            const item = document.createElement('div');
+                            item.className = 'carousel-item' + (index === 0 ? ' active' : '');
+                            const img = document.createElement('img');
+                            img.setAttribute('name', 'uploadImage');
+
+                            img.src = 'http://localhost:8080' + file.filePath;
+                            img.className = 'd-block w-100';
+                            item.appendChild(img);
+                            inner.appendChild(item);
+                        });
+
+                        // 컨트롤 버튼
+                        const prev = document.createElement('button');
+                        prev.className = 'carousel-control-prev';
+                        prev.type = 'button';
+                        prev.setAttribute('data-bs-target', '#' + carouselId);
+                        prev.setAttribute('data-bs-slide', 'prev');
+                        prev.innerHTML = `<span class="carousel-control-prev-icon"></span>`;
+
+                        const next = document.createElement('button');
+                        next.className = 'carousel-control-next';
+                        next.type = 'button';
+                        next.setAttribute('data-bs-target', '#' + carouselId);
+                        next.setAttribute('data-bs-slide', 'next');
+                        next.innerHTML = `<span class="carousel-control-next-icon"></span>`;
+
+                        // 조립
+                        carousel.appendChild(indicators);
+                        carousel.appendChild(inner);
+                        carousel.appendChild(prev);
+                        carousel.appendChild(next);
+                        container.appendChild(carousel);
                     }
                 </script>
             </div>

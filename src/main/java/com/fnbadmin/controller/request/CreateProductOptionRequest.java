@@ -10,6 +10,9 @@ import lombok.Setter;
 public class CreateProductOptionRequest {
 
     private int productId;
+    private String optionType;
+    private String optionGroupId;
+    private String optionId;
     private String name;
     private int price;
     private int isUse;

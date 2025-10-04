@@ -1,5 +1,6 @@
 package com.fnbadmin.controller.response;
 
+import com.fnbadmin.domain.ProductAttachFile;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,5 +31,6 @@ public class ProductInfoResponse {
     private String updatedBy;
 
     private List<ProductOptionResponse> productOptions;
+    private List<ProductAttachFileResponse> attachFiles;
 
 }

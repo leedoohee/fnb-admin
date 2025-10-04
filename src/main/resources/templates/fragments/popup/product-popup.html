@@ -5,6 +5,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+            <div class="modal-header justify-content-end">
+                <div class="col-auto">
+                    <button type="button" class="btn btn-primary" id="saveButton">저장</button>
+                </div>
+            </div>
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-table me-1"></i>
@@ -79,19 +84,19 @@
                                 <td class="col-lg-10">
                                     <div class="row">
                                         <div class="col-lg-2">
-                                            <input class="form-check-input" type="radio" name="saleForm" id="saleFormBoth" value="BOTH">
+                                            <input class="form-check-input" type="radio" name="saleType" id="saleFormBoth" value="1">
                                             <label class="form-check-label" for="saleFormBoth">
                                                 픽업+배달
                                             </label>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input class="form-check-input" type="radio" name="saleForm" id="saleFormPickup" value="PICKUP">
+                                            <input class="form-check-input" type="radio" name="saleType" id="saleFormPickup" value="2">
                                             <label class="form-check-label" for="saleFormPickup">
                                                 픽업
                                             </label>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input class="form-check-input" type="radio" name="saleForm" id="saleFormDelivery" value="DELIVERY">
+                                            <input class="form-check-input" type="radio" name="saleType" id="saleFormDelivery" value="3">
                                             <label class="form-check-label" for="saleFormDelivery">
                                                 배달
                                             </label>
@@ -152,7 +157,7 @@
                 <div class="card-body">
                     <div class="row mb-4 justify-content-lg-end">
                         <div class="col-auto">
-                            <button type="button" class="btn btn-primary">
+                            <button type="button" class="btn btn-primary" id="addOption">
                                 옵션추가
                             </button>
                         </div>
@@ -169,49 +174,11 @@
                 </div>
                 <div class="card-body">
                     <div class="row mb-4">
-                        <div id="carouselExampleDark" class="carousel carousel-dark slide">
-                            <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                            </div>
-                            <div class="carousel-inner">
-                                <div class="carousel-item active" data-bs-interval="10000">
-                                    <img src="https://www.adobe.com/uk/creativecloud/photography/discover/media_1ee5215326f82836b9095f4083bea7c5a9896eba5.png?width=2000&format=webply&optimize=medium" class="d-block w-100" alt="...">
-                                    <div class="carousel-caption d-none d-md-block">
-                                        <h5>First slide label</h5>
-                                        <p>Some representative placeholder content for the first slide.</p>
-                                    </div>
-                                </div>
-                                <div class="carousel-item" data-bs-interval="2000">
-                                    <img src="https://www.adobe.com/uk/creativecloud/photography/discover/media_1ee5215326f82836b9095f4083bea7c5a9896eba5.png?width=2000&format=webply&optimize=medium" class="d-block w-100" alt="...">
-                                    <div class="carousel-caption d-none d-md-block">
-                                        <h5>Second slide label</h5>
-                                        <p>Some representative placeholder content for the second slide.</p>
-                                    </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="https://www.adobe.com/uk/creativecloud/photography/discover/media_1ee5215326f82836b9095f4083bea7c5a9896eba5.png?width=2000&format=webply&optimize=medium" class="d-block w-100" alt="...">
-                                    <div class="carousel-caption d-none d-md-block">
-                                        <h5>Third slide label</h5>
-                                        <p>Some representative placeholder content for the third slide.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
+                        <div id="carouselContainer" class="carousel carousel-dark slide"></div>
                     </div>
                     <div class="row">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Recipient’s username" aria-label="Recipient’s username" aria-describedby="button-addon2">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
+                            <input type="file" id="imageUpload" class="form-control" multiple accept="image/*">
                         </div>
                     </div>
                 </div>
@@ -228,26 +195,261 @@
                 </div>
             </div>
             <script th:inline="javascript">
+                let editor = {};
+                let basicOptionTable = {};
+
                 document.addEventListener('DOMContentLoaded', function() {
-                    const editor = new toastui.Editor({
+                    editor = new toastui.Editor({
                         el: document.querySelector('#editor'),
                         previewStyle: 'vertical',
                         height: '500px'
                     });
 
-                    editor.getMarkdown();
+                    const options = [
+                        { label: "기본", value: "SINGLE" },
+                        { label: "추가", value: "MULTI" }
+                    ];
+
+                    basicOptionTable = new Tabulator("#basicOptionTable", {
+                        height:"300px",
+                        reactiveData: true,
+                        columns:[
+                            {title:"옵션구분", width: 150, field:"optionType", editor: "list",
+                                editorParams: {
+                                    values: options
+                                },
+                                itemFormatter: function(label, value, item, element){
+                                    return "<div>" + label + "</div>";
+                                },
+                            },
+                            {title:"옵션그룹", field:"optionGroupId", width: 150, editor: "list",
+                                editorParams: {
+                                    valuesLookup: async function(cell) {
+                                        const data = cell.getRow().getData();
+                                        let json   = {};
+
+                                        await fetch(`http://localhost:8080/option-group/auto-complete?optionType=${data.optionType}`)
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                                }
+
+                                                json = response.json();
+                                            });
+
+                                        return json;
+                                    },
+                                    allowEmpty: false,
+                                    autocomplete:true,
+                                    itemFormatter: function(label, value, item, element){
+                                        console.log(label);
+                                        return "<div>" + label + "</div>";
+                                    },
+                                    filterFunc: function(term, label, value, item){
+                                        return label === term;
+                                    },
+                                }
+                            },
+                            {title:"옵션명", field:"name", hozAlign:"center", width: 200, editor: "list",
+                                editorParams: {
+                                    valuesLookup: async function(cell) {
+                                        const data = cell.getRow().getData();
+                                        let json   = {};
+
+                                        await fetch(`http://localhost:8080/option/auto-complete?optionGroupId=${data.optionGroupId}`)
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                                }
+
+                                                json = response.json();
+                                            });
+
+                                        return json;
+                                    },
+                                    allowEmpty: false,
+                                    autocomplete:true,
+                                    itemFormatter: function(label, value, item, element){
+                                        return "<div>" + label + "</div>";
+                                    },
+                                    filterFunc: function(term, label, value, item){
+                                        return label === term;
+                                    },
+                                }
+                            },
+                            {title:"가격", field:"price"}
+                        ]
+                    });
+
+                    document.getElementById("addOption").addEventListener("click", () => {
+                        const row = {'optionType': '옵션구분 선택', 'optionGroupId': '옵션그룹 선택', 'name': '옵션 선택', 'price': 0 };
+                        basicOptionTable.addRow(row);
+                    });
+
+                    document.getElementById('imageUpload').addEventListener('change', function (event) {
+                        const files = event.target.files;
+                        const container = document.getElementById('carouselContainer');
+                        container.innerHTML = '';
+
+                        if (files.length === 0) return;
+
+                        const carouselId = 'dynamicCarousel';
+                        const carousel = document.createElement('div');
+                        carousel.className = 'carousel slide';
+                        carousel.id = carouselId;
+                        carousel.setAttribute('data-bs-ride', 'carousel');
+
+                        const indicators = document.createElement('div');
+                        indicators.className = 'carousel-indicators';
+
+                        const inner = document.createElement('div');
+                        inner.className = 'carousel-inner';
+
+                        Array.from(files).forEach((file, index) => {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                // 인디케이터 버튼
+                                const button = document.createElement('button');
+                                button.type = 'button';
+                                button.setAttribute('data-bs-target', '#' + carouselId);
+                                button.setAttribute('data-bs-slide-to', index);
+                                if (index === 0) button.className = 'active';
+                                indicators.appendChild(button);
+
+                                const item = document.createElement('div');
+                                item.className = 'carousel-item' + (index === 0 ? ' active' : '');
+                                const img = document.createElement('img');
+                                img.setAttribute('name', 'uploadImage');
+
+                                img.src = e.target.result;
+                                img.className = 'd-block w-100';
+                                item.appendChild(img);
+                                inner.appendChild(item);
+                            };
+                            reader.readAsDataURL(file);
+                        });
+
+                        // 컨트롤 버튼
+                        const prev = document.createElement('button');
+                        prev.className = 'carousel-control-prev';
+                        prev.type = 'button';
+                        prev.setAttribute('data-bs-target', '#' + carouselId);
+                        prev.setAttribute('data-bs-slide', 'prev');
+                        prev.innerHTML = `<span class="carousel-control-prev-icon"></span>`;
+
+                        const next = document.createElement('button');
+                        next.className = 'carousel-control-next';
+                        next.type = 'button';
+                        next.setAttribute('data-bs-target', '#' + carouselId);
+                        next.setAttribute('data-bs-slide', 'next');
+                        next.innerHTML = `<span class="carousel-control-next-icon"></span>`;
+
+                        // 조립
+                        carousel.appendChild(indicators);
+                        carousel.appendChild(inner);
+                        carousel.appendChild(prev);
+                        carousel.appendChild(next);
+                        container.appendChild(carousel);
+                    });
+
+                    document.getElementById('saveButton').addEventListener('click', saveProduct);
                 });
 
-                const basicOptionTable = new Tabulator("#basicOptionTable", {
-                    height:"300px",
-                    columns:[
-                        {title:"아이디", field:"optionId", width:100},
-                        {title:"옵션타입", field:"optionType", hozAlign:"right"},
-                        {title:"옵션그룹", field:"optionGroupId"},
-                        {title:"옵션명", field:"name", hozAlign:"center"},
-                        {title:"가격", field:"price"}
-                    ]
-                });
+                // 6. 저장 로직 구현
+                async function saveProduct() {
+
+                    const formData = new FormData();
+                    const productName = document.getElementById('name').value;
+                    const productType = document.querySelector('input[name="productType"]:checked')?.value;
+                    const status = document.querySelector('input[name="status"]:checked')?.value;
+                    const saleType = document.querySelector('input[name="saleType"]:checked')?.value;
+                    const price = document.getElementById('price').value;
+                    const quantity = document.getElementById('quantity').value;
+                    const isInfiniteQty = document.getElementById('isInfiniteQty').checked;
+                    const minQuantity = document.getElementById('minQuantity').value;
+                    const maxQuantity = document.getElementById('maxQuantity').value;
+                    const productImages = document.querySelectorAll('[name="uploadImage"]');
+                    const html = 'test';
+
+                    if (!productName || !productType || !status || !saleType || !price) {
+                        alert('상품명, 상품유형, 상품상태, 판매형태, 대표가격은 필수 입력 항목입니다.');
+                        return;
+                    }
+
+                    if (!isInfiniteQty && (!quantity || parseInt(quantity) < 0)) {
+                        alert('판매 가능 수량을 입력하거나 "제한없음"을 선택해야 합니다.');
+                        return;
+                    }
+
+                    const optionsData = basicOptionTable.getData().map(option => ({
+                        optionType: option.optionType,
+                        optionGroupId: option.optionGroupId,
+                        name: option.name,
+                        price: option.price
+                    }));
+
+                    const productData = {
+                        name: productName,
+                        productType: productType,
+                        status: status,
+                        saleType: saleType,
+                        price: parseFloat(price),
+                        quantity: isInfiniteQty ? -1 : parseInt(quantity),
+                        minQuantity: minQuantity ? parseInt(minQuantity) : 0,
+                        maxQuantity: maxQuantity ? parseInt(maxQuantity) : 999999,
+                        description: html,
+                        options: optionsData
+                    };
+
+                    formData.append('productRequest', new Blob([JSON.stringify(productData)], { type: 'application/json' }));
+
+                    // 이미지 파일 추가
+                    if (productImages.length > 0) {
+                        productImages.forEach(file => {
+                            formData.append('images', dataURLtoFile(file.src, 'temp.png'));
+                        });
+                    }
+
+                    try {
+                        const response = await fetch('http://localhost:8080/product', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (response.ok) {
+                            const result = response.json();
+                            alert('상품 등록이 성공적으로 완료되었습니다! 상품 ID: ' + result.id);
+                            // 성공 후 모달 닫기 또는 페이지 새로고침
+                            // const modalElement = document.getElementById('product-popup'); // 모달 요소 ID에 맞춰 변경 필요
+                            // if (modalElement) {
+                            //     const modal = bootstrap.Modal.getInstance(modalElement);
+                            //     modal?.hide();
+                            // }
+                        } else {
+                            const errorText = response.text();
+                            alert('상품 등록 실패: ' + response.status + ' - ' + errorText);
+                        }
+                    } catch (error) {
+                        console.error('Fetch error:', error);
+                        alert('네트워크 오류 또는 서버 접속 실패: ' + error.message);
+                    }
+                }
+
+                function dataURLtoFile(dataurl, filename) {
+                    const arr = dataurl.split(',');
+                    const mime = arr[0].match(/:(.*?);/)[1]; // "image/jpeg"
+                    const bstr = atob(arr[1]); // Base64 디코딩 (이진 문자열)
+                    let n = bstr.length;
+
+                    const u8arr = new Uint8Array(n);
+                    while(n--){
+                        u8arr[n] = bstr.charCodeAt(n);
+                    }
+
+                    // 3. File 객체 생성
+                    // new File(bits, name, options) 구문 사용
+                    return new File([u8arr], filename, {type:mime});
+                }
             </script>
         </div>
     </div>

@@ -2,10 +2,7 @@ package com.fnbadmin.controller.repository;
 
 import com.fnbadmin.controller.request.OrderRequest;
 import com.fnbadmin.controller.request.ProductRequest;
-import com.fnbadmin.domain.Order;
-import com.fnbadmin.domain.OrderAdditionalOption;
-import com.fnbadmin.domain.Product;
-import com.fnbadmin.domain.ProductOption;
+import com.fnbadmin.domain.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -73,6 +70,19 @@ public class ProductRepository {
         return typedQuery.getResultList();
     }
 
+    public List<ProductAttachFile> findProductAttachFiles(int productId) {
+        CriteriaBuilder cb                   = em.getCriteriaBuilder();
+        CriteriaQuery<ProductAttachFile> cq  = cb.createQuery(ProductAttachFile.class);
+        Root<ProductAttachFile> root         = cq.from(ProductAttachFile.class);
+
+        cq = cq.where(cb.and(cb.equal(root.get("productId"), productId)));
+
+        TypedQuery<ProductAttachFile> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getResultList();
+    }
+
+
     public int insertProduct(Product product) {
         this.em.persist(product);
         return product.getId();
@@ -84,6 +94,14 @@ public class ProductRepository {
         }
 
         return productOptions.size();
+    }
+
+    public int insertAttachFile(List<ProductAttachFile> attachFiles) {
+        for (ProductAttachFile file : attachFiles) {
+            this.em.persist(file);
+        }
+
+        return attachFiles.size();
     }
 
     private List<Predicate> buildConditions(ProductRequest productRequest, CriteriaBuilder cb, Root<Product> root) {

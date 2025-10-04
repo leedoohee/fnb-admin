@@ -1,22 +1,23 @@
 package com.fnbadmin.controller.service;
 
 import com.fnbadmin.controller.repository.ProductRepository;
-import com.fnbadmin.controller.request.CreateAdditionalOptRequest;
 import com.fnbadmin.controller.request.CreateProductOptionRequest;
 import com.fnbadmin.controller.request.CreateProductRequest;
 import com.fnbadmin.controller.request.ProductRequest;
 import com.fnbadmin.controller.response.*;
-import com.fnbadmin.domain.Order;
 import com.fnbadmin.domain.Product;
+import com.fnbadmin.domain.ProductAttachFile;
 import com.fnbadmin.domain.ProductOption;
+import com.fnbadmin.util.ImageUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,20 +30,38 @@ public class ProductService {
     }
 
     @Transactional
-    public boolean create(CreateProductRequest createProductRequest) {
+    public boolean create(CreateProductRequest createProductRequest, List<MultipartFile> images) throws IOException {
+        List<ProductAttachFile> files = new ArrayList<>();
 
-        int productId = insertProduct(createProductRequest);
+        int productId = this.insertProduct(createProductRequest);
 
         if (productId <= 0) {
             return false;
         }
 
-        createProductRequest.getProductOptions().forEach(po -> po.setProductId(productId));
+        createProductRequest.getOptions().forEach(po -> po.setProductId(productId));
 
-        // 이미지 업로드
-        int optionLength            = this.insertProductOptions(createProductRequest);
+        int optionLength = this.insertProductOptions(createProductRequest);
 
         if (optionLength < 0) {
+            return false;
+        }
+
+        // 이미지 업로드
+        for (MultipartFile image: images) {
+            String path = ImageUtil.uploadImage("/Users/dooheelee/Desktop/", image.getBytes());
+
+            files.add(ProductAttachFile.builder()
+                    .createdAt(LocalDateTime.now())
+                    .filePath(path)
+                    .fileName(image.getOriginalFilename())
+                    .productId(productId)
+                    .build());
+        }
+
+        int fileSize = this.productRepository.insertAttachFile(files);
+
+        if (fileSize < 0) {
             return false;
         }
 
@@ -78,7 +97,10 @@ public class ProductService {
     public ProductInfoResponse getInfo(int productId) {
         Product product                                     = this.productRepository.findProductById(productId);
         List<ProductOption> productOptions                  = this.productRepository.findProductOptions(productId);
+        List<ProductAttachFile> attachFiles                 = this.productRepository.findProductAttachFiles(productId);
+
         List<ProductOptionResponse> productOptionResponses  = new ArrayList<>();
+        List<ProductAttachFileResponse> attachFileResponses = new ArrayList<>();
 
         for (ProductOption productOption : productOptions) {
             productOptionResponses.add(ProductOptionResponse.builder()
@@ -89,6 +111,14 @@ public class ProductService {
                     .price(productOption.getPrice())
                     .createdAt(String.valueOf(productOption.getCreatedAt()))
                     .updatedAt(String.valueOf(productOption.getUpdatedAt()))
+                    .build());
+        }
+
+        for (ProductAttachFile attachFile : attachFiles) {
+            attachFileResponses.add(ProductAttachFileResponse.builder()
+                            .filePath(attachFile.getFilePath())
+                            .fileName(attachFile.getFileName())
+                            .productId(attachFile.getProductId())
                     .build());
         }
 
@@ -112,11 +142,11 @@ public class ProductService {
                 .createdBy(product.getCreatedBy())
                 .updatedBy(product.getUpdatedBy())
                 .productOptions(productOptionResponses)
+                .attachFiles(attachFileResponses)
                 .build();
     }
 
     private int insertProduct(CreateProductRequest createProductRequest) {
-
         Product product = Product.builder()
                 .name(createProductRequest.getName())
                 .description(createProductRequest.getDescription())
@@ -131,31 +161,29 @@ public class ProductService {
                 .isDelivery(createProductRequest.getIsDelivery())
                 .isUse(createProductRequest.getIsUse())
                 .quantity(createProductRequest.getQuantity())
-                .createdAt(LocalDateTime.parse(createProductRequest.getCreatedAt()))
-                .updatedAt(LocalDateTime.parse(createProductRequest.getUpdatedAt()))
-                .createdBy(createProductRequest.getCreatedBy())
-                .updatedBy(createProductRequest.getUpdatedBy())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .createdBy("admin")
+                .updatedBy("admin")
                 .build();
 
         return this.productRepository.insertProduct(product);
     }
 
     private int insertProductOptions(CreateProductRequest createProductRequest) {
-        List<CreateProductOptionRequest> productOptions = createProductRequest.getProductOptions();
+        List<CreateProductOptionRequest> productOptions = createProductRequest.getOptions();
         List<ProductOption> elements = new ArrayList<>();
-
-        if (productOptions == null || productOptions.isEmpty()) {
-            return 0;
-        }
 
         for (CreateProductOptionRequest createProductOptionRequest : productOptions) {
             elements.add(ProductOption.builder()
                     .productId(createProductOptionRequest.getProductId())
+                    .optionType(createProductOptionRequest.getOptionType())
+                    .optionGroupId(createProductOptionRequest.getOptionGroupId())
                     .name(createProductOptionRequest.getName())
                     .price(createProductOptionRequest.getPrice())
-                    .isUse(createProductOptionRequest.getIsUse())
-                    .createdAt(LocalDateTime.parse(new Date().toString()))
-                    .updatedAt(LocalDateTime.parse(new Date().toString()))
+                    .isUse(1)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
                     .createdBy("admin")
                     .updatedBy("admin")
                     .build());
