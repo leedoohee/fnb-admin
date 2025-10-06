@@ -159,26 +159,26 @@
                             },
                             columns:[
                                 {title:"상품코드", field:"id", width:100, cellClick: function(e, cell){
-                                        const targetElement = document.querySelector('[data-bs-target="#fullscreenModal"]');
                                         fetch(`http://localhost:8080/product/${cell.getValue()}`)
-                                            .then(response => {
-                                                if (!response.ok) {
-                                                    throw new Error(`HTTP error! status: ${response.status}`);
-                                                }
-                                                return response.json();
-                                            })
-                                            .then(data => {
-                                                basicOptionTable.setData(data.productOptions);
-                                                setImages(data.attachFiles);
-                                                mapProductDataToForm(data);
-
-                                                if (targetElement) {
-                                                    targetElement.click();
-                                                }
-                                            })
-                                            .catch(error => {
-                                                console.error('Error fetching data:', error);
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                throw new Error(`HTTP error! status: ${response.status}`);
+                                            }
+                                            return response.json();
+                                        })
+                                        .then(data => {
+                                            const detailEvent = new CustomEvent('click', {
+                                                detail: {
+                                                    productData: data
+                                                },
+                                                bubbles: true
                                             });
+
+                                            document.querySelector('[data-bs-target="#fullscreenModal"]').dispatchEvent(detailEvent);
+                                        })
+                                        .catch(error => {
+                                            console.error('Error fetching data:', error);
+                                        });
                                     }
                                 },
                                 {title:"상품명", field:"name", width:200},
@@ -187,10 +187,40 @@
                                 {title:"판매여부", field:"isUse", hozAlign:"center", width:100}
                             ]
                         });
+
+                        document.querySelector('[data-bs-target="#fullscreenModal"]').addEventListener('click', function(event){
+                            const data = event.detail.productData;
+
+                            if(data) {
+                                basicOptionTable.setData(data.productOptions);
+                                setImages(data.attachFiles);
+                                mapProductDataToForm(data);
+                            } else {
+                                const parent = document.getElementById('carouselContainer');
+
+                                document.getElementById('name').value = '';
+                                document.getElementById('price').value = 0;
+                                document.getElementById('quantity').value = 0;
+                                document.getElementById('minQuantity').value = 0;
+                                document.getElementById('maxQuantity').value = 0;
+                                document.getElementById('isInfiniteQty').checked = false;
+
+                                basicOptionTable.setData([]);
+
+                                while (parent.firstChild) {
+                                    parent.removeChild(parent.firstChild);
+                                }
+
+
+                                // document.getElementsByName('productType').checked = false;
+                                // document.getElementsByName('status').checked = false;
+                                // document.getElementsByName('saleForm').checked = false;
+                            }
+                        });
                     });
 
+
                     function mapProductDataToForm(productData) {
-                        // 1. 텍스트 및 숫자 입력 필드 매핑 (ID 기준)
                         document.getElementById('name').value = productData.name || '';
                         document.getElementById('price').value = productData.price || 0;
                         document.getElementById('quantity').value = productData.quantity || 0;

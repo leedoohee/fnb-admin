@@ -3,10 +3,7 @@ package com.fnbadmin.controller.repository;
 import com.fnbadmin.controller.request.CouponRequest;
 import com.fnbadmin.controller.request.MemberRequest;
 import com.fnbadmin.controller.request.OrderRequest;
-import com.fnbadmin.domain.Coupon;
-import com.fnbadmin.domain.CouponProduct;
-import com.fnbadmin.domain.Member;
-import com.fnbadmin.domain.Order;
+import com.fnbadmin.domain.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -42,15 +39,27 @@ public class CouponRepository {
     }
 
     public Coupon findCoupon(int couponId) {
-        return this.em.createQuery("select c from Coupon c where c.id = :couponId", Coupon.class)
-                .setParameter("couponId", couponId)
-                .getSingleResult();
+
+        CriteriaBuilder cb         = em.getCriteriaBuilder();
+        CriteriaQuery<Coupon> cq   = cb.createQuery(Coupon.class);
+        Root<Coupon> root          = cq.from(Coupon.class);
+
+        cq = cq.where(cb.and(cb.equal(root.get("id"), couponId)));
+        TypedQuery<Coupon> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getSingleResult();
     }
 
     public List<CouponProduct> findCouponProducts(int couponId) {
-        return this.em.createQuery("select cp from CouponProduct cp where cp.couponId = :couponId", CouponProduct.class)
-                .setParameter("couponId", couponId)
-                .getResultList();
+
+        CriteriaBuilder cb                = em.getCriteriaBuilder();
+        CriteriaQuery<CouponProduct> cq   = cb.createQuery(CouponProduct.class);
+        Root<CouponProduct> root          = cq.from(CouponProduct.class);
+
+        cq = cq.where(cb.and(cb.equal(root.get("couponId"), couponId)));
+        TypedQuery<CouponProduct> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getResultList();
     }
 
     public Long getTotalCouponCount(CouponRequest couponRequest) {
@@ -79,9 +88,15 @@ public class CouponRepository {
     }
 
     public List<CouponProduct> findCouponProducts(List<Integer> couponIds) {
-        return this.em.createQuery("select cp from CouponProduct cp where cp.couponId in (:couponIds)", CouponProduct.class)
-                .setParameter("couponIds", couponIds)
-                .getResultList();
+        CriteriaBuilder cb                  = em.getCriteriaBuilder();
+        CriteriaQuery<CouponProduct> cq     = cb.createQuery(CouponProduct.class);
+        Root<CouponProduct> root            = cq.from(CouponProduct.class);
+
+        cq = cq.where(cb.and(root.get("couponId").in(couponIds)));
+
+        TypedQuery<CouponProduct> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getResultList();
     }
 
     private List<Predicate> buildConditions(CouponRequest couponRequest, CriteriaBuilder cb, Root<Coupon> root) {

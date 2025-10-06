@@ -36,6 +36,19 @@ public class OptionRepository {
         return typedQuery.getResultList();
     }
 
+    public OptionGroup findOptionGroup(String optionType, String optionGroupId) {
+        CriteriaBuilder cb               = em.getCriteriaBuilder();
+        CriteriaQuery<OptionGroup> cq    = cb.createQuery(OptionGroup.class);
+        Root<OptionGroup> root           = cq.from(OptionGroup.class);
+
+        cq = cq.where(cb.and(cb.equal(root.get("optionType"), optionType)));
+        cq = cq.where(cb.and(cb.equal(root.get("optionGroupId"), optionGroupId)));
+
+        TypedQuery<OptionGroup> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getSingleResult();
+    }
+
     public List<Option> findOptions(String optionGroupId) {
         CriteriaBuilder cb          = em.getCriteriaBuilder();
         CriteriaQuery<Option> cq    = cb.createQuery(Option.class);
@@ -46,6 +59,19 @@ public class OptionRepository {
         TypedQuery<Option> typedQuery = em.createQuery(cq);
 
         return typedQuery.getResultList();
+    }
+
+    public Option findOption(String optionGroupId, String optionId) {
+        CriteriaBuilder cb          = em.getCriteriaBuilder();
+        CriteriaQuery<Option> cq    = cb.createQuery(Option.class);
+        Root<Option> root           = cq.from(Option.class);
+
+        cq = cq.where(cb.and(cb.equal(root.get("optionGroupId"), optionGroupId)));
+        cq = cq.where(cb.and(cb.equal(root.get("optionId"), optionId)));
+
+        TypedQuery<Option> typedQuery = em.createQuery(cq);
+
+        return typedQuery.getSingleResult();
     }
 
     private List<Predicate> buildConditions(ProductRequest productRequest, CriteriaBuilder cb, Root<Product> root) {

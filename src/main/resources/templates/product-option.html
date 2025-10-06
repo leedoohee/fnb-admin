@@ -20,8 +20,8 @@
                             </div>
                             <div class="card-body">
                                 <div class="list-group">
-                                    <a href="#" class="list-group-item list-group-item-action">기본</a>
-                                    <a href="#" class="list-group-item list-group-item-action">추가</a>
+                                    <a href="#" onclick="getOptionGroup('single')" class="list-group-item list-group-item-action">기본</a>
+                                    <a href="#" onclick="getOptionGroup('multi')" class="list-group-item list-group-item-action">추가</a>
                                 </div>
                             </div>
                         </div>
@@ -30,11 +30,8 @@
                                 <i class="fas fa-table me-1"></i>
                                 옵션그룹
                             </div>
-                            <div class="card-body">
-                                <ul class="list-group">
-                                    <li class="list-group-item active" aria-current="true">맛</li>
-                                    <li class="list-group-item">사이즈</li>
-                                </ul>
+                            <div id="optionGroup" class="card-body">
+
                             </div>
                         </div>
                         <div class="card mb-4">
@@ -42,11 +39,7 @@
                                 <i class="fas fa-table me-1"></i>
                                 옵션
                             </div>
-                            <div class="card-body">
-                                <ul class="list-group">
-                                    <li class="list-group-item active" aria-current="true">맛</li>
-                                    <li class="list-group-item">사이즈</li>
-                                </ul>
+                            <div id="option" class="card-body">
                             </div>
                         </div>
                     </div>
@@ -59,14 +52,14 @@
                             <div class="row mb-2 justify-content-end">
                                 <div class="col-auto">
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
-                                        등록
+                                        저장
                                     </button>
                                 </div>
                             </div>
                             <div class="row">
                                 <table class="table table-bordered">
                                     <tbody>
-                                    <tr>
+                                    <!--<tr>
                                         <td class="col-lg-2">옵션구분</td>
                                         <td class="col-lg-10">
                                             <div class="row">
@@ -103,28 +96,28 @@
                                                 </div>
                                             </div>
                                         </td>
-                                    </tr>
+                                    </tr>-->
                                     <tr>
                                         <td class="col-lg-2">옵션명</td>
                                         <td class="col-lg-10">
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="" />
+                                                <input type="text" class="form-control" id="name" />
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr id="descriptionSection">
                                         <td class="col-lg-2">설명</td>
                                         <td class="col-lg-10">
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="" />
+                                                <input type="text" class="form-control" id="description" />
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr id="priceSection">
                                         <td class="col-lg-2">가격</td>
                                         <td class="col-lg-10">
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="" />
+                                                <input type="text" class="form-control" id="price" />
                                             </div>
                                         </td>
                                     </tr>
@@ -133,14 +126,14 @@
                                         <td class="col-lg-10">
                                             <div class="row">
                                                 <div class="col-lg-2">
-                                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
-                                                    <label class="form-check-label" for="">
+                                                    <input class="form-check-input" type="radio" name="isUsed" id="use" value="true">
+                                                    <label class="form-check-label" for="use">
                                                         사용
                                                     </label>
                                                 </div>
                                                 <div class="col-lg-2">
-                                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="">
-                                                    <label class="form-check-label" for="">
+                                                    <input class="form-check-input" type="radio" name="isUsed" id="notUse" value="false">
+                                                    <label class="form-check-label" for="notUse">
                                                         미사용
                                                     </label>
                                                 </div>
@@ -169,3 +162,128 @@
         </div>
     </body>
 </html>
+<script>
+    function getOptionGroup(parameter) {
+        fetch(`http://localhost:8080/option-group/${parameter}/list`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const parent = document.getElementById('optionGroup');
+
+                while (parent.firstChild) {
+                    parent.removeChild(parent.firstChild);
+                }
+
+                const listGroupUl = document.createElement('ul');
+                listGroupUl.className = 'list-group';
+
+                data.forEach(element => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-group-item list-group-item-action';
+                    listItem.setAttribute('href', '#');
+                    listItem.setAttribute('onclick', `getOption('${element.optionGroupId}', '${parameter}')`);
+                    listItem.setAttribute('aria-current', 'true');
+                    listItem.setAttribute('id', element.optionGroupId);
+                    listItem.textContent = element.name; // '맛' 텍스트 추가
+
+                    listGroupUl.appendChild(listItem);
+                });
+
+                parent.appendChild(listGroupUl);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+    function getOption(optionGroupId, optionType) {
+        fetch(`http://localhost:8080/option/${optionGroupId}/list`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const parent = document.getElementById('option');
+
+                while (parent.firstChild) {
+                    parent.removeChild(parent.firstChild);
+                }
+
+                const listGroupUl = document.createElement('ul');
+                listGroupUl.className = 'list-group';
+
+                data.forEach(element => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-group-item list-group-item-action';
+                    listItem.setAttribute('aria-current', 'true');
+                    listItem.setAttribute('onclick', `getOptionInfo('${optionGroupId}', '${element.optionId}')`);
+                    listItem.setAttribute('id', element.optionId);
+                    listItem.textContent = element.name; // '맛' 텍스트 추가
+
+                    listGroupUl.appendChild(listItem);
+                });
+
+                parent.appendChild(listGroupUl);
+
+                return {'optionGroupId' : optionGroupId, 'optionType': optionType};
+            })
+            .then(afterData => {
+
+                fetch(`http://localhost:8080/option-group/${afterData.optionType}/${afterData.optionGroupId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        document.getElementById('name').value = data.name;
+                        document.getElementById('description').value = data.description;
+                        document.getElementById('descriptionSection').setAttribute('style', '');
+                        document.getElementById('priceSection').setAttribute('style', 'display:none;');
+                        const selector = `input[name="isUsed"][value="${data.used}"]`;
+                        const radio = document.querySelector(selector);
+
+                        if (radio) {
+                            radio.checked = true;
+                        }
+                        //document.getElementBy('isUsed').value = data.isUsed;
+                    }).
+                    catch(error => {
+
+                })
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+    function getOptionInfo(optionGroupId, optionId) {
+        fetch(`http://localhost:8080/option/${optionGroupId}/${optionId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('name').value = data.name;
+                document.getElementById('descriptionSection').setAttribute('style', 'display:none;');
+                document.getElementById('priceSection').setAttribute('style', '');
+                document.getElementById('price').value = data.price;
+
+                const selector = `input[name="isUsed"][value="${data.used}"]`;
+                const radio = document.querySelector(selector);
+
+                if (radio) {
+                    radio.checked = true;
+                }
+            });
+    }
+</script>
