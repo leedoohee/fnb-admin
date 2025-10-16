@@ -72,7 +72,7 @@ public class OrderRepository {
         return typedQuery.getResultList();
     }
 
-    public List<OrderOption> findOrderAdditionalOptions(List<String> orderProductIds) {
+    public List<OrderOption> findOrderOptions(List<String> orderProductIds) {
         CriteriaBuilder cb                          = em.getCriteriaBuilder();
         CriteriaQuery<OrderOption> cq     = cb.createQuery(OrderOption.class);
         Root<OrderOption> root            = cq.from(OrderOption.class);

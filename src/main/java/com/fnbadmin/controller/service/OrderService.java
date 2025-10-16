@@ -67,7 +67,7 @@ public class OrderService {
         List<OrderProduct> orderProducts = this.orderRepository.findOrderProducts(orderId);
         Payment payment                  = this.paymentRepository.findPayment(orderId);
         List<String> orderProductIdList  = orderProducts.stream().map(OrderProduct::getOrderProductId).map(String::valueOf).toList();
-        List<OrderOption> orderOptions   = this.orderRepository.findOrderAdditionalOptions(orderProductIdList);
+        List<OrderOption> orderOptions   = this.orderRepository.findOrderOptions(orderProductIdList);
 
         for (OrderProduct orderProduct : orderProducts) {
             List<OrderOption> options = orderOptions.stream()
