@@ -5,10 +5,7 @@ import com.fnbadmin.controller.request.ProductRequest;
 import com.fnbadmin.domain.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -47,12 +44,18 @@ public class ProductRepository {
         return typedQuery.getResultList();
     }
 
-    public Product findProductById(int productId) {
+    public Product findProduct(int productId) {
         CriteriaBuilder cb           = em.getCriteriaBuilder();
         CriteriaQuery<Product> cq    = cb.createQuery(Product.class);
         Root<Product> root           = cq.from(Product.class);
 
-        cq = cq.where(cb.and(cb.equal(root.get("id"), productId)));
+        root.fetch("productOption", JoinType.LEFT);
+        root.fetch("productAttachFile", JoinType.INNER);
+
+        cq = cq.select(root)
+                .where(cb.and(cb.equal(root.get("productId"), productId)))
+                .distinct(true);
+
         TypedQuery<Product> typedQuery = em.createQuery(cq);
 
         return typedQuery.getSingleResult();
@@ -85,7 +88,7 @@ public class ProductRepository {
 
     public int insertProduct(Product product) {
         this.em.persist(product);
-        return product.getId();
+        return product.getProductId();
     }
 
     public int insertProductOptions(List<ProductOption> productOptions) {
@@ -121,7 +124,7 @@ public class ProductRepository {
             if ("productName".equals(searchType)) {
                 searchConditions.add(cb.like(root.get("name"), "%" + searchWord + "%"));
             } else if ("productId".equals(searchType)) {
-                searchConditions.add(cb.equal(root.get("id"), searchWord));
+                searchConditions.add(cb.equal(root.get("productId"), searchWord));
             }
         }
 

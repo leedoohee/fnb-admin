@@ -1,9 +1,8 @@
 package com.fnbadmin.controller.repository;
 
 import com.fnbadmin.controller.request.OrderRequest;
-import com.fnbadmin.domain.Member;
 import com.fnbadmin.domain.Order;
-import com.fnbadmin.domain.OrderAdditionalOption;
+import com.fnbadmin.domain.OrderOption;
 import com.fnbadmin.domain.OrderProduct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -73,14 +72,14 @@ public class OrderRepository {
         return typedQuery.getResultList();
     }
 
-    public List<OrderAdditionalOption> findOrderAdditionalOptions(List<String> orderProductIds) {
+    public List<OrderOption> findOrderAdditionalOptions(List<String> orderProductIds) {
         CriteriaBuilder cb                          = em.getCriteriaBuilder();
-        CriteriaQuery<OrderAdditionalOption> cq     = cb.createQuery(OrderAdditionalOption.class);
-        Root<OrderAdditionalOption> root            = cq.from(OrderAdditionalOption.class);
+        CriteriaQuery<OrderOption> cq     = cb.createQuery(OrderOption.class);
+        Root<OrderOption> root            = cq.from(OrderOption.class);
 
         cq = cq.where(cb.and(root.get("orderProductId").in(orderProductIds)));
 
-        TypedQuery<OrderAdditionalOption> typedQuery = em.createQuery(cq);
+        TypedQuery<OrderOption> typedQuery = em.createQuery(cq);
 
         return typedQuery.getResultList();
     }

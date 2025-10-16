@@ -76,7 +76,7 @@ public class ProductService {
 
         for (Product product : products) {
             responses.add(ProductListResponse.builder()
-                            .id(product.getId())
+                            .productId(product.getProductId())
                             .name(product.getName())
                             .price(product.getPrice().intValue())
                             .status(product.getStatus())
@@ -95,14 +95,11 @@ public class ProductService {
     }
 
     public ProductInfoResponse getInfo(int productId) {
-        Product product                                     = this.productRepository.findProductById(productId);
-        List<ProductOption> productOptions                  = this.productRepository.findProductOptions(productId);
-        List<ProductAttachFile> attachFiles                 = this.productRepository.findProductAttachFiles(productId);
-
+        Product product                                     = this.productRepository.findProduct(productId);
         List<ProductOptionResponse> productOptionResponses  = new ArrayList<>();
         List<ProductAttachFileResponse> attachFileResponses = new ArrayList<>();
 
-        for (ProductOption productOption : productOptions) {
+        for (ProductOption productOption : product.getProductOption()) {
             productOptionResponses.add(ProductOptionResponse.builder()
                     .optionId(productOption.getOptionId())
                     .optionType(productOption.getOptionType())
@@ -114,7 +111,7 @@ public class ProductService {
                     .build());
         }
 
-        for (ProductAttachFile attachFile : attachFiles) {
+        for (ProductAttachFile attachFile : product.getProductAttachFiles()) {
             attachFileResponses.add(ProductAttachFileResponse.builder()
                             .filePath(attachFile.getFilePath())
                             .fileName(attachFile.getFileName())

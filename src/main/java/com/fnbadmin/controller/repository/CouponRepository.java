@@ -6,10 +6,7 @@ import com.fnbadmin.controller.request.OrderRequest;
 import com.fnbadmin.domain.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -26,7 +23,7 @@ public class CouponRepository {
 
     public int insertCoupon(Coupon coupon) {
         this.em.persist(coupon);
-        return coupon.getId();
+        return coupon.getCouponId();
     }
 
     //TODO 벌크여부 파악하기
@@ -44,7 +41,12 @@ public class CouponRepository {
         CriteriaQuery<Coupon> cq   = cb.createQuery(Coupon.class);
         Root<Coupon> root          = cq.from(Coupon.class);
 
-        cq = cq.where(cb.and(cb.equal(root.get("id"), couponId)));
+        root.fetch("couponProduct", JoinType.LEFT);
+
+        cq = cq.select(root)
+                .where(cb.and(cb.equal(root.get("id"), couponId)))
+                .distinct(true);
+
         TypedQuery<Coupon> typedQuery = em.createQuery(cq);
 
         return typedQuery.getSingleResult();
@@ -78,7 +80,9 @@ public class CouponRepository {
         CriteriaQuery<Coupon> cq   = cb.createQuery(Coupon.class);
         Root<Coupon> root          = cq.from(Coupon.class);
 
-        cq = cq.where(cb.and(this.buildConditions(couponRequest, cb, root).toArray(new Predicate[0])));
+        cq = cq.select(root)
+                .where(cb.and(this.buildConditions(couponRequest, cb, root).toArray(new Predicate[0])))
+                .distinct(true);
 
         TypedQuery<Coupon> typedQuery = em.createQuery(cq);
         typedQuery.setFirstResult(couponRequest.getPage() - 1);

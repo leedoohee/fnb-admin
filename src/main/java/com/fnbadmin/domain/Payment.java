@@ -1,15 +1,7 @@
 package com.fnbadmin.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,20 +10,20 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor // Satisfies JPA requirement for a default constructor
+@AllArgsConstructor
+@Builder
 @Table(name = "payment")
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
-    private int id;
+    @Column(name = "payment_id", updatable = false, nullable = false)
+    private int paymentId;
 
     // Foreign Key reference to the Order entity
     @Column(name = "order_id", unique = true, nullable = false) // Assuming one payment per order
     private String orderId;
 
-    // Using LocalDateTime for precise date and time tracking
     @Column(name = "payment_at", updatable = false)
     private LocalDateTime paymentAt;
 
@@ -48,7 +40,13 @@ public class Payment {
     @Column(name = "payment_amount", precision = 19, scale = 2)
     private BigDecimal paymentAmount;
 
-    // This relationship is loaded separately or mapped via @OneToMany
-    @Transient
+    @OneToMany(mappedBy = "payment")
     private List<PaymentElement> paymentElements;
+
+    @OneToOne(mappedBy = "payment")
+    private Order order;
+
+    public Payment() {
+
+    }
 }

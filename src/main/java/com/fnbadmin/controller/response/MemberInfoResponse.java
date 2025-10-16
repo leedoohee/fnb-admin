@@ -12,7 +12,6 @@ import java.util.List;
 @Builder
 public class MemberInfoResponse {
 
-    private int id;
     private String memberId;
     private String name;
     private String email;

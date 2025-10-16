@@ -1,7 +1,5 @@
 package com.fnbadmin.controller.repository;
 
-import com.fnbadmin.domain.Order;
-import com.fnbadmin.domain.OrderAdditionalOption;
 import com.fnbadmin.domain.Payment;
 import com.fnbadmin.domain.PaymentElement;
 import jakarta.persistence.EntityManager;

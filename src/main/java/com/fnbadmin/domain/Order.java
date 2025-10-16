@@ -1,15 +1,7 @@
 package com.fnbadmin.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,24 +9,24 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @Entity
-@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "order_master")
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
-    private int id;
-
-    @Column(name = "order_id", unique = true, nullable = false)
+    @Column(name = "order_id", updatable = false, nullable = false)
     private String orderId;
 
     @Column(name = "member_seq", nullable = false)
     private int memberSeq;
 
-    @Column(name = "member_id", nullable = false)
+    @Column(name = "member_id", updatable = false, nullable = false)
     private String memberId;
+
+    @Column(name = "member_name", nullable = false)
+    private String memberName;
 
     @Column(name = "order_date", updatable = false)
     private LocalDateTime orderDate;
@@ -57,12 +49,18 @@ public class Order {
     @Column(name = "discount_amount", precision = 19, scale = 2)
     private BigDecimal discountAmount;
 
-    @Transient
+    @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProducts;
 
-    @Transient
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", insertable=false, updatable=false)
     private Member member;
 
-    @Transient
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_id")
     private Payment payment;
+
+    public Order() {
+
+    }
 }

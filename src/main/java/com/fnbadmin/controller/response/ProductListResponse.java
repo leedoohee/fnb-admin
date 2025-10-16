@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 public class ProductListResponse {
 
-    private int id;
+    private int productId;
     private String name;
     private int price;
     private String status;

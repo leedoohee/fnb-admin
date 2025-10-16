@@ -1,10 +1,8 @@
 package com.fnbadmin.controller.response;
 
-import com.fnbadmin.domain.Order;
-import com.fnbadmin.domain.OrderAdditionalOption;
+import com.fnbadmin.domain.OrderOption;
 import com.fnbadmin.domain.OrderProduct;
 import com.fnbadmin.domain.Payment;
-import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,5 +32,5 @@ public class OrderInfoResponse {
     private Payment payment;
 
     @Transient
-    List<OrderAdditionalOption> orderAdditionalOptions;
+    List<OrderOption> orderOptions;
 }

@@ -1,22 +1,16 @@
 package com.fnbadmin.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
 @Builder
 @AllArgsConstructor
 @Table(name = "product")
@@ -24,8 +18,8 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
-    private int id;
+    @Column(name = "product_id", updatable = false, nullable = false)
+    private int productId;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -79,7 +73,31 @@ public class Product {
     @Column(name = "updated_by")
     private String updatedBy;
 
-    @Transient
-    private List<ProductOption> productOptions;
+    @Column(name = "is_available_coupon")
+    private int isAvailableCoupon;
 
+    @Column(name = "is_apply_membership")
+    private int isApplyMembership;
+
+    @Column(name = "apply_member_grades")
+    private String applyMemberGrades;
+
+    @Column(name = "apply_member_grade_dis_type")
+    private String applyMemberGradeDisType;
+
+    @Column(name = "apply_member_grade_dis_amt")
+    private BigDecimal applyMemberGradeDisAmt;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductOption> productOption;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductAttachFile> productAttachFiles;
+
+    @OneToOne(mappedBy = "product")
+    private OrderProduct orderProduct;
+
+    public Product() {
+
+    }
 }

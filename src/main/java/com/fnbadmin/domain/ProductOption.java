@@ -1,11 +1,6 @@
 package com.fnbadmin.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +13,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
 @Builder
 @AllArgsConstructor
 @Table(name = "product_option")
@@ -26,8 +20,8 @@ public class ProductOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
-    private int id;
+    @Column(name = "product_option_id", updatable = false, nullable = false)
+    private int productOptionId;
 
     @Column(name = "option_id", nullable = false)
     private int optionId;
@@ -51,7 +45,6 @@ public class ProductOption {
     @Column(name = "is_use") // 1:사용, 0:미사용
     private int isUse;
 
-    // Using LocalDateTime for creation/update timestamps (Best Practice)
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
@@ -63,4 +56,12 @@ public class ProductOption {
 
     @Column(name = "updated_by")
     private String updatedBy;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", insertable=false, updatable=false)
+    private Product product;
+
+    public ProductOption() {
+
+    }
 }

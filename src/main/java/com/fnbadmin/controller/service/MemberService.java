@@ -36,7 +36,7 @@ public class MemberService {
                     .joinDate(String.valueOf(member.getJoinDate()))
                     .phoneNumber(member.getPhoneNumber())
                     .points(member.getPoints())
-                    .memberGrade(member.getMemberGrade())
+                    .memberGrade(member.getMemberGrade().getGrade())
                     .ownedCouponCount(member.getOwnedCouponCount())
                     .totalOrderCount(member.getTotalOrderCount())
                     .build());
@@ -50,10 +50,9 @@ public class MemberService {
 
     public MemberInfoResponse getInfo(String memberId) {
 
-        Member member = this.memberRepository.findMemberById(memberId);
+        Member member = this.memberRepository.findMember(memberId);
 
         return MemberInfoResponse.builder()
-                .id(member.getId())
                 .memberId(member.getMemberId())
                 .name(member.getName())
                 .email(member.getEmail())
@@ -62,7 +61,7 @@ public class MemberService {
                 .joinDate(String.valueOf(member.getJoinDate()))
                 .status(member.getStatus())
                 .points(member.getPoints())
-                .memberGrade(member.getMemberGrade())
+                .memberGrade(member.getMemberGrade().getGrade())
                 .birthDate(String.valueOf(member.getBirthDate()))
                 .ownedCouponCount(member.getOwnedCouponCount())
                 .totalOrderCount(member.getTotalOrderCount())  //batch
@@ -79,7 +78,7 @@ public class MemberService {
 
         for (MemberGrade grade : memberGrades) {
             responses.add(MemberGradeListResponse.builder()
-                    .id(grade.getId())
+                    .memberGradeId(grade.getMemberGradeId())
                     .grade(grade.getGrade())
                     .description(grade.getDescription())
                     .discountType(grade.getDiscountType())

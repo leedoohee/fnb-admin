@@ -1,4 +1,5 @@
 package com.fnbadmin.domain;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,9 +15,6 @@ public class OptionGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
-
     @Column(name = "option_group_id", unique = true, nullable = false, length = 36)
     private String optionGroupId;
 

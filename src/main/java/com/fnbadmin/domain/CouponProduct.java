@@ -1,29 +1,21 @@
 package com.fnbadmin.domain;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Date;
 
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table(name = "coupon_product")
 public class CouponProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
-    private int id;
+    @Column(name = "coupon_product_id", updatable = false, nullable = false)
+    private int couponProductId;
 
     @Column(name = "coupon_id", nullable = false)
     private int couponId;
@@ -53,4 +45,12 @@ public class CouponProduct {
 
     @Column(name = "updated_by")
     private String updatedBy;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id", insertable=false, updatable=false)
+    private Coupon coupon;
+
+    public CouponProduct() {
+
+    }
 }

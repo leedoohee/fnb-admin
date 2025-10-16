@@ -3,12 +3,11 @@ package com.fnbadmin.controller.service;
 import com.fnbadmin.controller.repository.OrderRepository;
 import com.fnbadmin.controller.repository.PaymentRepository;
 import com.fnbadmin.controller.request.OrderRequest;
-import com.fnbadmin.controller.response.MemberListResponse;
 import com.fnbadmin.controller.response.OrderInfoResponse;
 import com.fnbadmin.controller.response.OrderListResponse;
 import com.fnbadmin.controller.response.PageResponse;
 import com.fnbadmin.domain.Order;
-import com.fnbadmin.domain.OrderAdditionalOption;
+import com.fnbadmin.domain.OrderOption;
 import com.fnbadmin.domain.OrderProduct;
 import com.fnbadmin.domain.Payment;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -69,15 +67,15 @@ public class OrderService {
         List<OrderProduct> orderProducts = this.orderRepository.findOrderProducts(orderId);
         Payment payment                  = this.paymentRepository.findPayment(orderId);
         List<String> orderProductIdList  = orderProducts.stream().map(OrderProduct::getOrderProductId).map(String::valueOf).toList();
-        List<OrderAdditionalOption> orderAdditionalOptions = this.orderRepository.findOrderAdditionalOptions(orderProductIdList);
+        List<OrderOption> orderOptions   = this.orderRepository.findOrderAdditionalOptions(orderProductIdList);
 
         for (OrderProduct orderProduct : orderProducts) {
-            List<OrderAdditionalOption> additionalOptions = orderAdditionalOptions.stream()
-                    .filter(orderAdditionalOption ->
-                            orderAdditionalOption.getOrderProductId() == orderProduct.getOrderProductId())
+            List<OrderOption> options = orderOptions.stream()
+                    .filter(orderOption ->
+                            orderOption.getOrderProductId() == orderProduct.getOrderProductId())
                     .toList();
 
-            orderProduct.setOrderAdditionalOptions(additionalOptions);
+            orderProduct.setOrderOptions(options);
         }
 
         return OrderInfoResponse.builder()

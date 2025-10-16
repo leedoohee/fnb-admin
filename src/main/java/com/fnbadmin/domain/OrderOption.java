@@ -15,7 +15,7 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @Table(name = "order_additional_option")
-public class OrderAdditionalOption {
+public class OrderOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

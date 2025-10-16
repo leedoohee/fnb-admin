@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -17,9 +18,9 @@ public class CreateCouponRequest {
     private String description;
     private String couponType; // site-wide, product-specific 등
     private String discountType; // percentage, fixed amount 등
-    private String discountAmount;
-    private Date applyStartDate;
-    private Date applyEndDate;
+    private BigDecimal discountAmount;
+    private LocalDateTime applyStartDate;
+    private LocalDateTime applyEndDate;
     private BigDecimal minApplyPrice;// 최소 주문 금액 등
     private String memberShipGrades;
     private int availableQuantity;

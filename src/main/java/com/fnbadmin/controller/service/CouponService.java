@@ -11,6 +11,8 @@ import com.fnbadmin.controller.response.PageResponse;
 import com.fnbadmin.domain.Coupon;
 import com.fnbadmin.domain.CouponProduct;
 import com.fnbadmin.domain.MemberCoupon;
+import com.fnbadmin.util.CouponStatus;
+import com.fnbadmin.util.Used;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,17 +37,17 @@ public class CouponService {
 
         int lastPageNumber  = (int) (Math.ceil((double) totalCount / couponRequest.getPageLimit()));
 
-        List<Integer> couponIdList          = coupons.stream().map(Coupon::getId).toList();
+        List<Integer> couponIdList          = coupons.stream().map(Coupon::getCouponId).toList();
         List<MemberCoupon> memberCoupons    = this.memberRepository.findMemberCoupons(couponIdList);
         List<CouponProduct> couponProducts  = this.couponRepository.findCouponProducts(couponIdList);
 
         for (Coupon coupon : coupons) {
             List<CouponProduct> relatedProducts = couponProducts.stream()
-                    .filter(cp -> cp.getCouponId() == coupon.getId())
+                    .filter(cp -> cp.getCouponId() == coupon.getCouponId())
                     .toList();
 
             List<MemberCoupon> ownedCoupons = memberCoupons.stream()
-                    .filter(mc -> mc.getCouponId() == coupon.getId())
+                    .filter(mc -> mc.getCouponId() == coupon.getCouponId())
                     .toList();
 
             coupon.setCouponProducts(relatedProducts);
@@ -54,15 +56,19 @@ public class CouponService {
 
         for (Coupon coupon : coupons) {
             responses.add(CouponListResponse.builder()
-                    .couponId(coupon.getId())
+                    .couponId(coupon.getCouponId())
                     .description(coupon.getDescription())
                     .applyStartDate(String.valueOf(coupon.getApplyStartAt()))
                     .applyEndDate(String.valueOf(coupon.getApplyEndAt()))
                     .status(coupon.getStatus())
                     .couponName(coupon.getName())
                     .couponProductCount(coupon.getCouponProducts().size())
-                    .usedMemberCount(coupon.getMemberCoupons().stream().filter(cp -> cp.getIsUsed().equals("Y")).toList().size())
-                    .nonUsedMemberCount(coupon.getMemberCoupons().stream().filter(cp -> cp.getIsUsed().equals("N")).toList().size())
+                    .usedMemberCount(coupon.getMemberCoupons().stream()
+                                        .filter(cp -> cp.getIsUsed().equals(Used.USED.getValue()))
+                                        .toList().size())
+                    .nonUsedMemberCount(coupon.getMemberCoupons().stream()
+                                        .filter(cp -> cp.getIsUsed().equals(Used.NOTUSED.getValue())).
+                                        toList().size())
                     .build());
         }
 
@@ -76,8 +82,7 @@ public class CouponService {
         Coupon coupon                       = this.couponRepository.findCoupon(couponId);
         //TODO CreateCouponResponse로 변경
         //TODO couponProducts 세팅
-        List<CouponProduct> couponProducts  = this.couponRepository.findCouponProducts(couponId);
-        coupon.setCouponProducts(couponProducts);
+        List<CouponProduct> couponProducts  = coupon.getCouponProducts();
 
         return CouponInfoResponse.builder()
                 .coupon(coupon)
@@ -93,14 +98,14 @@ public class CouponService {
                 .description(couponRequest.getDescription())
                 .couponType(couponRequest.getCouponType())
                 .discountType(couponRequest.getDiscountType())
-                .discountAmount(couponRequest.getDiscountAmount())
+                .amount(couponRequest.getDiscountAmount())
                 .applyStartAt(couponRequest.getApplyStartDate())
                 .applyEndAt(couponRequest.getApplyEndDate())
                 .minApplyPrice(couponRequest.getMinApplyPrice())
                 .memberShipGrades(couponRequest.getMemberShipGrades())
                 .availableQuantity(couponRequest.getAvailableQuantity())
                 .usedQuantity(0)
-                .status("active")
+                .status(CouponStatus.AVAILABLE.getValue())
                 .createdBy("admin") // TODO: 추후 로그인한 사용자로 변경
                 .updatedBy("admin") // TODO: 추후 로그인한 사용자로 변경
                 .couponCode(couponRequest.getCouponCode())

@@ -7,10 +7,7 @@ import com.fnbadmin.domain.MemberGrade;
 import com.fnbadmin.domain.Order;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -41,7 +38,10 @@ public class MemberRepository {
         CriteriaQuery<Member> cq    = cb.createQuery(Member.class);
         Root<Member> root           = cq.from(Member.class);
 
-        cq = cq.where(cb.and(this.buildConditions(memberRequest, cb, root).toArray(new Predicate[0])));
+        root.fetch("memberGrade", JoinType.INNER);
+
+        cq = cq.select(root)
+                .where(cb.and(this.buildConditions(memberRequest, cb, root).toArray(new Predicate[0])));
 
         TypedQuery<Member> typedQuery = em.createQuery(cq);
         typedQuery.setFirstResult(memberRequest.getPage() - 1);
@@ -50,7 +50,7 @@ public class MemberRepository {
         return typedQuery.getResultList();
     }
 
-    public Member findMemberById(String memberId) {
+    public Member findMember(String memberId) {
         CriteriaBuilder cb          = em.getCriteriaBuilder();
         CriteriaQuery<Member> cq    = cb.createQuery(Member.class);
         Root<Member> root           = cq.from(Member.class);

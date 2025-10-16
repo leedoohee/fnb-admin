@@ -1,32 +1,26 @@
 package com.fnbadmin.domain;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import jakarta.persistence.Transient;
 
 @Getter
 @Setter
-@Entity
 @AllArgsConstructor
+@Entity
 @Builder
 @Table(name = "coupon")
 public class Coupon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
-    private int id;
+    @Column(name = "coupon_id", updatable = false, nullable = false)
+    private int couponId;
 
     @Column(name = "name")
     private String name;
@@ -40,16 +34,16 @@ public class Coupon {
     @Column(name = "discount_type")
     private String discountType;
 
-    @Column(name = "discount_amount")
-    private String discountAmount;
+    @Column(name = "amount")
+    private BigDecimal amount;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "apply_start_at")
-    private Date applyStartAt;
+    private LocalDateTime applyStartAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "apply_end_at")
-    private Date applyEndAt;
+    private LocalDateTime applyEndAt;
 
     @Column(name = "min_apply_price", precision = 19, scale = 2)
     private BigDecimal minApplyPrice;
@@ -86,14 +80,23 @@ public class Coupon {
     @Column(name = "issued_type") // 자동 발급, 수동 발급
     private String issuedType;
 
-    // This field is managed by the application, not persisted in the DB table
-    @Transient
+    @Column(name = "apply_grades")
+    private String applyGrades;
+
+    @Column(name = "apply_entire_product")
+    private String applyEntireProduct;
+
+    @OneToMany(mappedBy = "coupon")
     private List<CouponProduct> couponProducts;
 
-    @Transient
+    @OneToMany(mappedBy = "coupon")
     private List<MemberCoupon> memberCoupons;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "couponId")
+    private OrderProduct orderProduct;
+
     public Coupon() {
-        // Default constructor
+
     }
 }

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Setter
 @Builder
 public class MemberGradeListResponse {
-    private int id;
+    private int memberGradeId;
     private String grade;
     private String description;
     private String discountType;
