@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class OptionGroup {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "option_group_id", unique = true, nullable = false, length = 36)
     private String optionGroupId;
 

@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 public class Option {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "option_id", unique = true, nullable = false)
     private String optionId;
 

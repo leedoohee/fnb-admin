@@ -1,39 +1,44 @@
 package com.fnbadmin.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
-@Table(name = "order_additional_option")
+@AllArgsConstructor
+@Builder
+@Table(name = "order_option")
 public class OrderOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
-    private int id;
+    @Column(name = "order_option_id", updatable = false, nullable = false)
+    private int orderOptionId;
 
     @Column(name = "order_id", nullable = false)
     private String orderId;
 
+    @Column(name = "option_type", nullable = false)
+    private String optionType;
+
     @Column(name = "order_product_id", nullable = false)
     private int orderProductId;
 
-    @Column(name = "additional_option_id", nullable = false)
-    private String additionalOptionId;
+    @Column(name = "option_id", nullable = false)
+    private String optionId;
 
-    @Column(name = "additional_option_name")
-    private String additionalOptionName;
+    @Column(name = "option_name")
+    private String optionName;
 
     @Column(name = "price")
     private int price;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="order_product_id", insertable=false, updatable=false)
+    private OrderProduct orderProduct;
+
+    public OrderOption() {
+
+    }
 }
