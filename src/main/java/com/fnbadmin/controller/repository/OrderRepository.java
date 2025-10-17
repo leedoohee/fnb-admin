@@ -6,10 +6,7 @@ import com.fnbadmin.domain.OrderOption;
 import com.fnbadmin.domain.OrderProduct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -40,7 +37,11 @@ public class OrderRepository {
         CriteriaQuery<Order> cq    = cb.createQuery(Order.class);
         Root<Order> root           = cq.from(Order.class);
 
-        cq = cq.where(cb.and(this.buildConditions(orderRequest, cb, root).toArray(new Predicate[0])));
+        root.fetch("payment", JoinType.LEFT);
+
+        cq = cq.select(root)
+                .where(cb.and(this.buildConditions(orderRequest, cb, root).toArray(new Predicate[0])))
+                .distinct(true);
 
         TypedQuery<Order> typedQuery = em.createQuery(cq);
         typedQuery.setFirstResult(orderRequest.getPage() - 1);
@@ -54,7 +55,12 @@ public class OrderRepository {
         CriteriaQuery<Order> cq    = cb.createQuery(Order.class);
         Root<Order> root           = cq.from(Order.class);
 
-        cq = cq.where(cb.and(cb.equal(root.get("orderId"), orderId)));
+        root.fetch("orderProducts", JoinType.INNER);
+
+        cq = cq.select(root)
+                .where(cb.and(cb.equal(root.get("orderId"), orderId)))
+                .distinct(true);
+
         TypedQuery<Order> typedQuery = em.createQuery(cq);
 
         return typedQuery.getSingleResult();
@@ -73,9 +79,9 @@ public class OrderRepository {
     }
 
     public List<OrderOption> findOrderOptions(List<String> orderProductIds) {
-        CriteriaBuilder cb                          = em.getCriteriaBuilder();
-        CriteriaQuery<OrderOption> cq     = cb.createQuery(OrderOption.class);
-        Root<OrderOption> root            = cq.from(OrderOption.class);
+        CriteriaBuilder cb             = em.getCriteriaBuilder();
+        CriteriaQuery<OrderOption> cq  = cb.createQuery(OrderOption.class);
+        Root<OrderOption> root         = cq.from(OrderOption.class);
 
         cq = cq.where(cb.and(root.get("orderProductId").in(orderProductIds)));
 

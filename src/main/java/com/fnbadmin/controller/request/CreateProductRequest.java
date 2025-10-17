@@ -23,7 +23,7 @@ public class CreateProductRequest {
     private int saleType; // 1:일반, 2:예약
     private int isTakeOut; // 1:포장, 0:매장
     private int isDelivery; // 1:배달, 0:매장
-    private int isUse; // 1:사용, 0:미사용
+    private String isUsed; // 1:사용, 0:미사용
     private int Quantity;
     private String createdAt;
     private String updatedAt;

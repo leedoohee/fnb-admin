@@ -9,13 +9,13 @@ import com.fnbadmin.domain.Product;
 import com.fnbadmin.domain.ProductAttachFile;
 import com.fnbadmin.domain.ProductOption;
 import com.fnbadmin.util.ImageUtil;
+import com.fnbadmin.util.Used;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +84,7 @@ public class ProductService {
                             .saleType(product.getSaleType())
                             .createdAt(String.valueOf(product.getCreatedAt()))
                             .updatedAt(String.valueOf(product.getUpdatedAt()))
-                            .isUse(product.getIsUse() == 1 ? "사용" : "미사용")
+                            .isUsed(product.getIsUsed().equals(Used.USED.getValue()) ? "사용" : "미사용")
                             .build());
         }
 
@@ -132,7 +132,7 @@ public class ProductService {
                 .saleType(product.getSaleType())
                 .isTakeOut(product.getIsTakeOut())
                 .isDelivery(product.getIsDelivery())
-                .isUse(product.getIsUse())
+                .isUse(product.getIsUsed())
                 .isInfiniteQty(product.getIsInfiniteQty())
                 .createdAt(String.valueOf(product.getCreatedAt()))
                 .updatedAt(String.valueOf(product.getUpdatedAt()))
@@ -156,7 +156,7 @@ public class ProductService {
                 .saleType(createProductRequest.getSaleType())
                 .isTakeOut(createProductRequest.getIsTakeOut())
                 .isDelivery(createProductRequest.getIsDelivery())
-                .isUse(createProductRequest.getIsUse())
+                .isUsed(createProductRequest.getIsUsed())
                 .quantity(createProductRequest.getQuantity())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())

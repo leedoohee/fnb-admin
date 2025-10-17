@@ -35,7 +35,7 @@ public class CouponController {
 
     @GetMapping("/coupon/list")
     public ResponseEntity<PageResponse<CouponListResponse>> getCoupons(CouponRequest couponRequest) {
-        return ResponseEntity.ok(this.couponService.getList(couponRequest));
+        return ResponseEntity.ok(this.couponService.getCoupons(couponRequest));
     }
 
     @GetMapping("/coupon/{couponId}")

@@ -30,7 +30,7 @@ public class CouponService {
         this.memberRepository = memberRepository;
     }
 
-    public PageResponse<CouponListResponse>  getList(CouponRequest couponRequest) {
+    public PageResponse<CouponListResponse>  getCoupons(CouponRequest couponRequest) {
         List<CouponListResponse> responses = new ArrayList<>();
         long totalCount         = this.couponRepository.getTotalCouponCount(couponRequest);
         List<Coupon> coupons    = this.couponRepository.findCoupons(couponRequest);
@@ -67,8 +67,8 @@ public class CouponService {
                                         .filter(cp -> cp.getIsUsed().equals(Used.USED.getValue()))
                                         .toList().size())
                     .nonUsedMemberCount(coupon.getMemberCoupons().stream()
-                                        .filter(cp -> cp.getIsUsed().equals(Used.NOTUSED.getValue())).
-                                        toList().size())
+                                        .filter(cp -> cp.getIsUsed().equals(Used.NOTUSED.getValue()))
+                                        .toList().size())
                     .build());
         }
 
@@ -79,7 +79,10 @@ public class CouponService {
     }
 
     public CouponInfoResponse getInfo(int couponId) {
-        Coupon coupon                       = this.couponRepository.findCoupon(couponId);
+        Coupon coupon = this.couponRepository.findCoupon(couponId);
+
+        assert coupon != null: "쿠폰이 존재하지 않습니다.";
+
         //TODO CreateCouponResponse로 변경
         //TODO couponProducts 세팅
         List<CouponProduct> couponProducts  = coupon.getCouponProducts();

@@ -17,5 +17,5 @@ public class ProductListResponse {
     private int saleType; // 1:일반, 2:예약
     private String createdAt;
     private String updatedAt;
-    private String isUse; // 1:사용, 0:미사용
+    private String isUsed; // 1:사용, 0:미사용
 }

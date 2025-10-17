@@ -56,7 +56,7 @@ public class Product {
     private int isDelivery;
 
     @Column(name = "is_use") // 1:사용, 0:미사용
-    private int isUse;
+    private String isUsed;
 
     @Column(name = "quantity")
     private int quantity;

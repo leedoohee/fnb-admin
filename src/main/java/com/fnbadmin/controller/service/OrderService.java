@@ -35,15 +35,6 @@ public class OrderService {
 
         int lastPageNumber  = (int) (Math.ceil((double) totalCount / orderRequest.getPageLimit()));
 
-        List<String> orderIdList = orders.stream().map(Order::getOrderId).toList();
-        List<Payment> payments   = this.paymentRepository.findPayments(orderIdList);
-
-        for (Order order : orders) {
-            payments.stream().filter(payment -> payment.getOrderId().equals(order.getOrderId()))
-                    .findFirst()
-                    .ifPresent(order::setPayment);
-        }
-
         for(Order order : orders) {
             responses.add(OrderListResponse.builder()
                     .orderId(order.getOrderId())
@@ -64,10 +55,10 @@ public class OrderService {
 
     public OrderInfoResponse getInfo(String orderId) {
         Order order                      = this.orderRepository.findOrder(orderId);
-        List<OrderProduct> orderProducts = this.orderRepository.findOrderProducts(orderId);
-        Payment payment                  = this.paymentRepository.findPayment(orderId);
+        List<OrderProduct> orderProducts = order.getOrderProducts();
         List<String> orderProductIdList  = orderProducts.stream().map(OrderProduct::getOrderProductId).map(String::valueOf).toList();
         List<OrderOption> orderOptions   = this.orderRepository.findOrderOptions(orderProductIdList);
+        Payment payment                  = this.paymentRepository.findPayment(orderId);
 
         for (OrderProduct orderProduct : orderProducts) {
             List<OrderOption> options = orderOptions.stream()
