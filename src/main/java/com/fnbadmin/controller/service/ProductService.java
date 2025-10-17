@@ -132,7 +132,7 @@ public class ProductService {
                 .saleType(product.getSaleType())
                 .isTakeOut(product.getIsTakeOut())
                 .isDelivery(product.getIsDelivery())
-                .isUse(product.getIsUsed())
+                .isUsed(product.getIsUsed())
                 .isInfiniteQty(product.getIsInfiniteQty())
                 .createdAt(String.valueOf(product.getCreatedAt()))
                 .updatedAt(String.valueOf(product.getUpdatedAt()))

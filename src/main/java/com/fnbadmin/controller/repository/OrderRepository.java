@@ -56,6 +56,7 @@ public class OrderRepository {
         Root<Order> root           = cq.from(Order.class);
 
         root.fetch("orderProducts", JoinType.INNER);
+        root.fetch("payment", JoinType.LEFT);
 
         cq = cq.select(root)
                 .where(cb.and(cb.equal(root.get("orderId"), orderId)))

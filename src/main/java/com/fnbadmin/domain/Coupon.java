@@ -86,6 +86,15 @@ public class Coupon {
     @Column(name = "apply_entire_product")
     private String applyEntireProduct;
 
+    @Column(name = "publish_count")
+    private int publishCount;
+
+    @Column(name = "used_count")
+    private int usedCount;
+
+    @Column(name = "applied_product_count")
+    private int appliedProductCount;
+
     @OneToMany(mappedBy = "coupon")
     private List<CouponProduct> couponProducts;
 
