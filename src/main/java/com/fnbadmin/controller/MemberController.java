@@ -34,7 +34,7 @@ public class MemberController {
 
     @GetMapping("/member/list")
     public ResponseEntity<PageResponse<MemberListResponse>> getMembers(MemberRequest memberRequest) {
-        return ResponseEntity.ok(this.memberService.getList(memberRequest));
+        return ResponseEntity.ok(this.memberService.getMembers(memberRequest));
     }
 
     @GetMapping("/member/{memberId}")

@@ -48,20 +48,9 @@ public class CouponRepository {
                 .distinct(true);
 
         TypedQuery<Coupon> typedQuery = em.createQuery(cq);
+        typedQuery.setMaxResults(1);
 
-        return typedQuery.getSingleResult();
-    }
-
-    public List<CouponProduct> findCouponProducts(int couponId) {
-
-        CriteriaBuilder cb                = em.getCriteriaBuilder();
-        CriteriaQuery<CouponProduct> cq   = cb.createQuery(CouponProduct.class);
-        Root<CouponProduct> root          = cq.from(CouponProduct.class);
-
-        cq = cq.where(cb.and(cb.equal(root.get("couponId"), couponId)));
-        TypedQuery<CouponProduct> typedQuery = em.createQuery(cq);
-
-        return typedQuery.getResultList();
+        return !typedQuery.getResultList().isEmpty() ? typedQuery.getResultList().get(0) : null;
     }
 
     public Long getTotalCouponCount(CouponRequest couponRequest) {

@@ -13,6 +13,7 @@ import com.fnbadmin.domain.CouponProduct;
 import com.fnbadmin.domain.MemberCoupon;
 import com.fnbadmin.util.CouponStatus;
 import com.fnbadmin.util.Used;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,39 +21,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CouponService {
 
     private final CouponRepository couponRepository;
-    private final MemberRepository memberRepository;
 
-    public CouponService(CouponRepository couponRepository, MemberRepository memberRepository) {
-        this.couponRepository = couponRepository;
-        this.memberRepository = memberRepository;
-    }
-
-    public PageResponse<CouponListResponse>  getList(CouponRequest couponRequest) {
+    public PageResponse<CouponListResponse>  getCoupons(CouponRequest couponRequest) {
         List<CouponListResponse> responses = new ArrayList<>();
         long totalCount         = this.couponRepository.getTotalCouponCount(couponRequest);
         List<Coupon> coupons    = this.couponRepository.findCoupons(couponRequest);
 
         int lastPageNumber  = (int) (Math.ceil((double) totalCount / couponRequest.getPageLimit()));
-
-        List<Integer> couponIdList          = coupons.stream().map(Coupon::getCouponId).toList();
-        List<MemberCoupon> memberCoupons    = this.memberRepository.findMemberCoupons(couponIdList);
-        List<CouponProduct> couponProducts  = this.couponRepository.findCouponProducts(couponIdList);
-
-        for (Coupon coupon : coupons) {
-            List<CouponProduct> relatedProducts = couponProducts.stream()
-                    .filter(cp -> cp.getCouponId() == coupon.getCouponId())
-                    .toList();
-
-            List<MemberCoupon> ownedCoupons = memberCoupons.stream()
-                    .filter(mc -> mc.getCouponId() == coupon.getCouponId())
-                    .toList();
-
-            coupon.setCouponProducts(relatedProducts);
-            coupon.setMemberCoupons(ownedCoupons);
-        }
 
         for (Coupon coupon : coupons) {
             responses.add(CouponListResponse.builder()
@@ -63,12 +42,8 @@ public class CouponService {
                     .status(coupon.getStatus())
                     .couponName(coupon.getName())
                     .couponProductCount(coupon.getCouponProducts().size())
-                    .usedMemberCount(coupon.getMemberCoupons().stream()
-                                        .filter(cp -> cp.getIsUsed().equals(Used.USED.getValue()))
-                                        .toList().size())
-                    .nonUsedMemberCount(coupon.getMemberCoupons().stream()
-                                        .filter(cp -> cp.getIsUsed().equals(Used.NOTUSED.getValue())).
-                                        toList().size())
+                    .usedMemberCount(coupon.getUsedCount())
+                    .nonUsedMemberCount(coupon.getPublishCount() - coupon.getUsedCount())
                     .build());
         }
 
@@ -79,7 +54,10 @@ public class CouponService {
     }
 
     public CouponInfoResponse getInfo(int couponId) {
-        Coupon coupon                       = this.couponRepository.findCoupon(couponId);
+        Coupon coupon = this.couponRepository.findCoupon(couponId);
+
+        assert coupon != null: "쿠폰이 존재하지 않습니다.";
+
         //TODO CreateCouponResponse로 변경
         //TODO couponProducts 세팅
         List<CouponProduct> couponProducts  = coupon.getCouponProducts();

@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,49 +62,21 @@ public class ProductRepository {
         return typedQuery.getSingleResult();
     }
 
-    public List<ProductOption> findProductOptions(int productId) {
-        CriteriaBuilder cb               = em.getCriteriaBuilder();
-        CriteriaQuery<ProductOption> cq  = cb.createQuery(ProductOption.class);
-        Root<ProductOption> root         = cq.from(ProductOption.class);
-
-        cq = cq.where(cb.and(cb.equal(root.get("id"), productId)));
-
-        TypedQuery<ProductOption> typedQuery = em.createQuery(cq);
-
-        return typedQuery.getResultList();
-    }
-
-    public List<ProductAttachFile> findProductAttachFiles(int productId) {
-        CriteriaBuilder cb                   = em.getCriteriaBuilder();
-        CriteriaQuery<ProductAttachFile> cq  = cb.createQuery(ProductAttachFile.class);
-        Root<ProductAttachFile> root         = cq.from(ProductAttachFile.class);
-
-        cq = cq.where(cb.and(cb.equal(root.get("productId"), productId)));
-
-        TypedQuery<ProductAttachFile> typedQuery = em.createQuery(cq);
-
-        return typedQuery.getResultList();
-    }
-
-
+    @Transactional
     public int insertProduct(Product product) {
         this.em.persist(product);
         return product.getProductId();
     }
 
+    @Transactional
     public int insertProductOptions(List<ProductOption> productOptions) {
-        for (ProductOption po : productOptions) {
-            this.em.persist(po);
-        }
-
+        this.em.persist(productOptions);
         return productOptions.size();
     }
 
+    @Transactional
     public int insertAttachFile(List<ProductAttachFile> attachFiles) {
-        for (ProductAttachFile file : attachFiles) {
-            this.em.persist(file);
-        }
-
+        this.em.persist(attachFiles);
         return attachFiles.size();
     }
 

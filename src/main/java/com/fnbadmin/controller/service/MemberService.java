@@ -22,7 +22,7 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public PageResponse<MemberListResponse> getList(MemberRequest memberRequest) {
+    public PageResponse<MemberListResponse> getMembers(MemberRequest memberRequest) {
         List<MemberListResponse> responses = new ArrayList<>();
         Long totalCount         = this.memberRepository.getTotalMemberCount(memberRequest);
         int lastPageNumber      = (int) (Math.ceil((double) totalCount / memberRequest.getPageLimit()));

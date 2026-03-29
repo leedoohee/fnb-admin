@@ -10,6 +10,7 @@ import com.fnbadmin.domain.Order;
 import com.fnbadmin.domain.OrderOption;
 import com.fnbadmin.domain.OrderProduct;
 import com.fnbadmin.domain.Payment;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,15 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final PaymentRepository paymentRepository;
-
-    public OrderService(OrderRepository orderRepository, PaymentRepository paymentRepository) {
-        this.orderRepository = orderRepository;
-        this.paymentRepository = paymentRepository;
-    }
 
     public PageResponse<OrderListResponse> getList(OrderRequest orderRequest) {
         List<OrderListResponse> responses = new ArrayList<>();
@@ -34,15 +30,6 @@ public class OrderService {
         List<Order> orders  = this.orderRepository.findOrders(orderRequest);
 
         int lastPageNumber  = (int) (Math.ceil((double) totalCount / orderRequest.getPageLimit()));
-
-        List<String> orderIdList = orders.stream().map(Order::getOrderId).toList();
-        List<Payment> payments   = this.paymentRepository.findPayments(orderIdList);
-
-        for (Order order : orders) {
-            payments.stream().filter(payment -> payment.getOrderId().equals(order.getOrderId()))
-                    .findFirst()
-                    .ifPresent(order::setPayment);
-        }
 
         for(Order order : orders) {
             responses.add(OrderListResponse.builder()
@@ -64,8 +51,8 @@ public class OrderService {
 
     public OrderInfoResponse getInfo(String orderId) {
         Order order                      = this.orderRepository.findOrder(orderId);
-        List<OrderProduct> orderProducts = this.orderRepository.findOrderProducts(orderId);
-        Payment payment                  = this.paymentRepository.findPayment(orderId);
+        List<OrderProduct> orderProducts = order.getOrderProducts();
+        Payment payment                  = order.getPayment();
         List<String> orderProductIdList  = orderProducts.stream().map(OrderProduct::getOrderProductId).map(String::valueOf).toList();
         List<OrderOption> orderOptions   = this.orderRepository.findOrderOptions(orderProductIdList);
 
